@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "potatoptimize",
+  "version": "${version}",
+  "name": "potatoptimize",
+  "description": "Non-vanilla optimizations for Minecraft Fabric",
+  "authors": [
+    "QPCrummer"
+  ],
+  "contact": {
+    "repo": "https://github.com/Tater-Certified/potatoptimize"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/potatoptimize/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.tatercertified.potatoptimize.client.PotatoptimizeClient"
+    ],
+    "main": [
+      "com.github.tatercertified.potatoptimize.Potatoptimize"
+    ]
+  },
+  "mixins": [
+    "potatoptimize.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

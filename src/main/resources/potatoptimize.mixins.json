@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.tatercertified.potatoptimize.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "com.github.tatercertified.potatoptimize.mixin.MixinConfig",
+  "mixins": [
+    "entity.collisions.NetherPortalMixin",
+    "entity.spawning.SpawnHelperMixin",
+    "entity.ticking.LivingEntityMixin",
+    "memory.memory_reserve.CrashMemoryReserveMixin",
+    "random.RandomEntityMixin",
+    "random.RandomMathHelperMixin",
+    "random.RandomSpawnHelperMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
