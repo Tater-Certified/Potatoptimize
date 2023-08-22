@@ -24,6 +24,7 @@
   "mixins": [
     "potatoptimize.mixins.json"
   ],
+  "accessWidener" : "potatoptimize.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

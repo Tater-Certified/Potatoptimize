@@ -1,4 +1,4 @@
-package com.github.tatercertified.potatoptimize.mixin.random;
+package com.github.tatercertified.potatoptimize.mixin.random.entity;
 
 import com.github.tatercertified.potatoptimize.utils.FastRandom;
 import net.minecraft.entity.Entity;

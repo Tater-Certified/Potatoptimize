@@ -8,10 +8,13 @@
     "entity.collisions.NetherPortalMixin",
     "entity.spawning.SpawnHelperMixin",
     "entity.ticking.LivingEntityMixin",
+    "fastmath.joml.JOMLMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
-    "random.RandomEntityMixin",
-    "random.RandomMathHelperMixin",
-    "random.RandomSpawnHelperMixin"
+    "random.entity.RandomEntityMixin",
+    "random.entity.RandomSpawnHelperMixin",
+    "random.math.RandomMathHelperMixin",
+    "threading.async_update_neighbor.NeighborUpdaterMixin",
+    "threading.paletted_container.SyncPalettedContainerMixin"
   ],
   "client": [
   ],
