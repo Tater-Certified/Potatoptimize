@@ -28,7 +28,7 @@ public abstract class NeighborUpdaterMixin {
      */
     @Overwrite
     private void runQueuedUpdates() {
-        Potatoptimize.almightyServerInstance.runTasks(() -> {
+        Potatoptimize.blockUpdateExecutor.submit(() -> {
             try {
                 block3: while (!this.queue.isEmpty() || !this.pending.isEmpty()) {
                     for (int i = this.pending.size() - 1; i >= 0; --i) {
@@ -47,7 +47,6 @@ public abstract class NeighborUpdaterMixin {
                 this.pending.clear();
                 this.depth = 0;
             }
-            return true;
         });
     }
 }
