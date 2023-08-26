@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class Potatoptimize implements ModInitializer {
     public static PotatoptimizeConfig CONFIG;
     public static MinecraftServer almightyServerInstance;
-    public static final ThreadPoolExecutor blockUpdateExecutor = new ThreadPoolExecutor(2, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+    public static final ThreadPoolExecutor blockUpdateExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     /**
      * Runs the mod initializer.
      */

@@ -3,13 +3,11 @@ package com.github.tatercertified.potatoptimize.mixin.threading.async_update_nei
 import com.github.tatercertified.potatoptimize.Potatoptimize;
 import net.minecraft.world.World;
 import net.minecraft.world.block.ChainRestrictedNeighborUpdater;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Mixin(ChainRestrictedNeighborUpdater.class)
 public abstract class NeighborUpdaterMixin {
@@ -21,14 +19,18 @@ public abstract class NeighborUpdaterMixin {
     @Shadow @Final private World world;
 
     @Shadow private int depth;
+    @Unique
+    private final ConcurrentLinkedDeque<ChainRestrictedNeighborUpdater.Entry> cqueue = new ConcurrentLinkedDeque<>();
 
     /**
      * @author QPCrummer
-     * @reason Make it async!
+     * @reason Make it multithreaded!
      */
     @Overwrite
     private void runQueuedUpdates() {
         Potatoptimize.blockUpdateExecutor.submit(() -> {
+            //cqueue.addAll(queue);
+            //queue.clear();
             try {
                 block3: while (!this.queue.isEmpty() || !this.pending.isEmpty()) {
                     for (int i = this.pending.size() - 1; i >= 0; --i) {
