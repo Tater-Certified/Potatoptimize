@@ -1,4 +1,4 @@
-package com.github.tatercertified.potatoptimize.utils;
+package com.github.tatercertified.potatoptimize.utils.random;
 
 import net.minecraft.util.math.random.Random;
 

@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
-import com.github.tatercertified.potatoptimize.utils.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.math.random.RandomSeed;

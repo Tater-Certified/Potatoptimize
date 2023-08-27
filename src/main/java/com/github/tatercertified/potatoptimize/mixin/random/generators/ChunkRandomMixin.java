@@ -1,6 +1,8 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
-import com.github.tatercertified.potatoptimize.utils.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.Potatoptimize;
+import com.github.tatercertified.potatoptimize.utils.random.SplittableRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Final;
@@ -17,8 +19,11 @@ public class ChunkRandomMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void changeRandom(Random baseRandom, CallbackInfo ci) {
-        this.baseRandom = new ThreadLocalRandomImpl();
+        // Use TLR if the seed is not cared about as it is better for a multithreaded environment
+        if (!Potatoptimize.isUnsafeRandomEnabled) {
+            this.baseRandom = new ThreadLocalRandomImpl();
+        } else {
+            this.baseRandom = new SplittableRandomImpl();
+        }
     }
-
-
 }

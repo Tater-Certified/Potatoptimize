@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.random.world;
 
-import com.github.tatercertified.potatoptimize.utils.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;

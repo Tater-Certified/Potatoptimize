@@ -11,6 +11,7 @@ public class Potatoptimize implements ModInitializer {
     public static PotatoptimizeConfig CONFIG;
     public static MinecraftServer almightyServerInstance;
     public static final ExecutorService clientTickExecutor = Executors.newSingleThreadExecutor();
+    public static boolean isUnsafeRandomEnabled;
     /**
      * Runs the mod initializer.
      */

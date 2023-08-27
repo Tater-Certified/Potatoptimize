@@ -15,6 +15,7 @@
     "random.generators.GaussianGeneratorMixin",
     "random.generators.RandomMixin",
     "random.math.RandomMathHelperMixin",
+    "random.unsafe.ForceEnableUnsafeMixin",
     "random.world.RandomWorldMixin",
     "threading.paletted_container.SyncPalettedContainerMixin"
   ],

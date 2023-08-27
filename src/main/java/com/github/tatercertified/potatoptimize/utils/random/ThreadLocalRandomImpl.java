@@ -1,25 +1,18 @@
-package com.github.tatercertified.potatoptimize.utils;
+package com.github.tatercertified.potatoptimize.utils.random;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.math.random.RandomSplitter;
-import sun.misc.Unsafe;
 
-import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThreadLocalRandomImpl implements PotatoptimizedRandom {
     private final ThreadLocalRandom random = ThreadLocalRandom.current();;
-    private long seed;
     public ThreadLocalRandomImpl() {
-        this.seed = nextLong();
-        setSeed(this.seed);
     }
 
-    public ThreadLocalRandomImpl(long seed) {
-        this.seed = seed;
-        setSeed(this.seed);
+    public ThreadLocalRandomImpl(long ignoredSeed) {
     }
 
     @Override
@@ -29,28 +22,11 @@ public class ThreadLocalRandomImpl implements PotatoptimizedRandom {
 
     @Override
     public RandomSplitter nextSplitter() {
-        return new Splitter(this.seed, this);
+        return new Splitter(0L,this);
     }
 
     @Override
     public void setSeed(long seed) {
-        this.seed = cursedSetSeed(seed);
-    }
-    private static final Unsafe U = UnsafeGrabber.UNSAFE;
-    private static final long SEED = U.objectFieldOffset(findThreadLocalRandomSeedField());
-
-    private static Field findThreadLocalRandomSeedField() {
-        try {
-            return Thread.class.getDeclaredField("threadLocalRandomSeed");
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError(e);
-        }
-    }
-
-    private long cursedSetSeed(long seed) {
-        long r;
-        U.putLong(Thread.currentThread(), SEED, r = seed);
-        return r;
     }
 
     @Override
@@ -153,14 +129,11 @@ public class ThreadLocalRandomImpl implements PotatoptimizedRandom {
         return new UUID( nextLong() & 0xFFFFFFFFFFFF0FFFL | 0x4000L, nextLong()  & 0x3FFFFFFFFFFFFFFFL | Long.MIN_VALUE);
     }
 
-    private record Splitter(long seed, ThreadLocalRandomImpl instance) implements RandomSplitter {
+    public record Splitter(long seed, ThreadLocalRandomImpl instance) implements RandomSplitter {
         @Override
         public Random split(String seed) {
-            long newSeed = Long.parseLong(seed);
-            if (this.seed == newSeed) {
-                return this.instance;
-            }
-            return new ThreadLocalRandomImpl(newSeed);
+            int i = seed.hashCode();
+            return new ThreadLocalRandomImpl((long)i ^ this.seed);
         }
 
         @Override
