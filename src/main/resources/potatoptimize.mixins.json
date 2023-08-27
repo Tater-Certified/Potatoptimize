@@ -11,12 +11,15 @@
     "fastmath.joml.JOMLMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
     "random.entity.RandomEntityMixin",
-    "random.entity.RandomSpawnHelperMixin",
+    "random.generators.ChunkRandomMixin",
+    "random.generators.GaussianGeneratorMixin",
+    "random.generators.RandomMixin",
     "random.math.RandomMathHelperMixin",
-    "threading.async_update_neighbor.NeighborUpdaterMixin",
+    "random.world.RandomWorldMixin",
     "threading.paletted_container.SyncPalettedContainerMixin"
   ],
   "client": [
+    "threading.client_tick.ClientTickMixin"
   ],
   "injectors": {
     "defaultRequire": 1

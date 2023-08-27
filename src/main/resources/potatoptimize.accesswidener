@@ -8,5 +8,3 @@ accessible method net/minecraft/world/chunk/PalettedContainer$Data writePacket (
 accessible method net/minecraft/world/chunk/PalettedContainer applyEach ([ILjava/util/function/IntUnaryOperator;)V
 accessible method net/minecraft/world/chunk/PalettedContainer$PaletteProvider getBits (Lnet/minecraft/util/collection/IndexedIterable;I)I
 accessible class net/minecraft/world/chunk/PaletteResizeListener
-accessible class net/minecraft/world/block/ChainRestrictedNeighborUpdater$Entry
-accessible method net/minecraft/world/block/ChainRestrictedNeighborUpdater$Entry update (Lnet/minecraft/world/World;)Z

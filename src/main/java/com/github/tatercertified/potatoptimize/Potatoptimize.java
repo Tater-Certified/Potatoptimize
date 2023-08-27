@@ -5,14 +5,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Potatoptimize implements ModInitializer {
     public static PotatoptimizeConfig CONFIG;
     public static MinecraftServer almightyServerInstance;
-    public static final ThreadPoolExecutor blockUpdateExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+    public static final ExecutorService clientTickExecutor = Executors.newSingleThreadExecutor();
     /**
      * Runs the mod initializer.
      */
