@@ -138,7 +138,7 @@ public abstract class SyncPalettedContainerMixin<T> implements PaletteResizeList
         BiMapPalette<T> biMapPalette = new BiMapPalette<>(idList, this.data.storage.getElementBits(), this.dummyListener);
         int i = paletteProvider.getContainerSize();
         int[] is = new int[i];
-        this.data.storage.writePaletteIndices(is);
+        this.data.storage.method_39892(is);
         PalettedContainer.applyEach(is, id -> biMapPalette.index(this.data.palette.get(id)));
         int j = paletteProvider.getBits(idList, biMapPalette.getSize());
         if (j != 0) {

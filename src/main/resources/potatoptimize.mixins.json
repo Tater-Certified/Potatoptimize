@@ -5,10 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.github.tatercertified.potatoptimize.mixin.MixinConfig",
   "mixins": [
-    "entity.collisions.NetherPortalMixin",
     "entity.spawning.SpawnHelperMixin",
     "entity.ticking.LivingEntityMixin",
-    "fastmath.joml.JOMLMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
     "random.entity.RandomEntityMixin",
     "random.generators.ChunkRandomMixin",
