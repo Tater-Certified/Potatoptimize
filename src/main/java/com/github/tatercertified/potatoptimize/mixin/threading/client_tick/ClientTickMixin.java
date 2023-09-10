@@ -4,7 +4,6 @@ import com.github.tatercertified.potatoptimize.Potatoptimize;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.network.message.MessageHandler;
 import net.minecraft.client.sound.MusicTracker;
 import net.minecraft.client.sound.SoundManager;
@@ -25,11 +24,6 @@ public abstract class ClientTickMixin {
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/message/MessageHandler;processDelayedMessages()V"))
     private void redirectProcessDelayedMessages(MessageHandler instance) {
         Potatoptimize.clientTickExecutor.submit(instance::processDelayedMessages);
-    }
-
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;tick()V"))
-    private void redirectInteractionManager(ClientPlayerInteractionManager instance) {
-        Potatoptimize.clientTickExecutor.submit(instance::tick);
     }
 
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/MusicTracker;tick()V"))

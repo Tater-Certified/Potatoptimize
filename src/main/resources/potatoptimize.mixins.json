@@ -17,7 +17,9 @@
     "random.math.RandomMathHelperMixin",
     "random.unsafe.ForceEnableUnsafeMixin",
     "random.world.RandomWorldMixin",
-    "threading.paletted_container.SyncPalettedContainerMixin"
+    "threading.entity_ticking.EntityListMixin",
+    "threading.paletted_container.SyncPalettedContainerMixin",
+    "threading.world_thread_safe.WorldSafeGuardMixin"
   ],
   "client": [
     "threading.client_tick.ClientTickMixin"
