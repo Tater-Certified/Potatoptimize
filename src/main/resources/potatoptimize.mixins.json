@@ -5,8 +5,14 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.github.tatercertified.potatoptimize.mixin.MixinConfig",
   "mixins": [
+    "entity.bat.BatLightCheckMixin",
     "entity.collisions.NetherPortalMixin",
+    "entity.halloween.BatEntityMixin",
+    "entity.halloween.IsHalloweenMixin",
+    "entity.halloween.SkeletonEntityMixin",
+    "entity.halloween.ZombieEntityMixin",
     "entity.spawning.SpawnHelperMixin",
+    "entity.statistics.PlayerEntityStatsMixin",
     "entity.ticking.LivingEntityMixin",
     "fastmath.joml.JOMLMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
@@ -17,6 +23,7 @@
     "random.math.RandomMathHelperMixin",
     "random.unsafe.ForceEnableUnsafeMixin",
     "random.world.RandomWorldMixin",
+    "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
     "threading.paletted_container.SyncPalettedContainerMixin",
     "threading.world_thread_safe.WorldSafeGuardMixin"
