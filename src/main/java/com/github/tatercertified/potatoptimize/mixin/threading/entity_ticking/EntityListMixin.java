@@ -47,6 +47,15 @@ public class EntityListMixin {
      */
     @Overwrite
     public void forEach(Consumer<Entity> action) {
-        this.concurrentEntities.forEach(6, (key, value) -> action.accept(value));
+        var iterator = this.concurrentEntities.values().iterator();
+
+        if (iterator.hasNext()) {
+            Entity entity = iterator.next();
+            if (entity.getWorld().isClient) {
+                this.concurrentEntities.forEach((key, value) -> action.accept(value));
+            } else {
+                this.concurrentEntities.forEach(6, (key, value) -> action.accept(value));
+            }
+        }
     }
 }
