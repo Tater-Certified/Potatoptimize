@@ -30,6 +30,7 @@
     "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
     "threading.entity_ticking.EntityTestMixin",
+    "threading.entity_ticking.TestBoatEntityMixin",
     "threading.paletted_container.SyncPalettedContainerMixin",
     "threading.world_thread_safe.WorldSafeGuardMixin"
   ],
