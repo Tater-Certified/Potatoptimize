@@ -29,7 +29,9 @@
     "remove.profiler.ProfilerSystemMixin",
     "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
-    "threading.paletted_container.SyncPalettedContainerMixin"
+    "threading.entity_ticking.EntityServerThreadingMixin",
+    "threading.paletted_container.SyncPalettedContainerMixin",
+    "threading.thread_safe_chunks.ChunkAccessMixin"
   ],
   "client": [
     "threading.client_tick.ClientTickMixin"

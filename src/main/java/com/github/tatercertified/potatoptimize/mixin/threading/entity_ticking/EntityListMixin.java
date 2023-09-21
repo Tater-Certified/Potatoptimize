@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.threading.entity_ticking;
 
+import com.github.tatercertified.potatoptimize.interfaces.ServerEntityThreadInterface;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.EntityList;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +55,7 @@ public class EntityListMixin {
             if (entity.getWorld().isClient) {
                 this.concurrentEntities.forEach((key, value) -> action.accept(value));
             } else {
-                this.concurrentEntities.forEach(6, (key, value) -> action.accept(value));
+                ((ServerEntityThreadInterface)entity.getServer()).getEntityExecutor().concurrentForEach(6, this.concurrentEntities, action);
             }
         }
     }
