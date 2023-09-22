@@ -1,5 +1,7 @@
 package com.github.tatercertified.potatoptimize.utils.threading;
 
+import net.minecraft.entity.Entity;
+
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -39,7 +41,7 @@ public class ThreadedTaskExecutor {
      * @param threshold Objects per thread
      * @param map ConcurrentHashMap for "forEach"
      */
-    public void concurrentForEach(int threshold, ConcurrentHashMap<?, ?> map, Consumer<? super Object> action) {
-        map.forEach(threshold, (key, value) -> action.accept(value));
+    public void concurrentForEach(int threshold, ConcurrentHashMap<?, ?> map, Consumer<Entity> action) {
+        map.forEach(threshold, (key, value) -> action.accept((Entity) value));
     }
 }

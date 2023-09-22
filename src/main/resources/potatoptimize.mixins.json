@@ -7,6 +7,8 @@
   "mixins": [
     "entity.bat.BatLightCheckMixin",
     "entity.collisions.NetherPortalMixin",
+    "entity.fall_damage.FixTntMinecartMixin",
+    "entity.fall_damage.NoFallDamageMixin",
     "entity.halloween.BatEntityMixin",
     "entity.halloween.IsHalloweenMixin",
     "entity.halloween.SkeletonEntityMixin",
