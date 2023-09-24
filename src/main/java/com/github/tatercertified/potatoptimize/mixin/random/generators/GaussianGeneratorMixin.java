@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(GaussianGenerator.class)
 public class GaussianGeneratorMixin {
-    @Final @Shadow public Random baseRandom = new ThreadLocalRandomImpl();
+    @Final @Shadow public final Random baseRandom = new ThreadLocalRandomImpl();
 
     @Shadow private boolean hasNextGaussian;
 

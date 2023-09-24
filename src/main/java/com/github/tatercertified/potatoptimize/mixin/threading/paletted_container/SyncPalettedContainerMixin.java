@@ -14,6 +14,10 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.LongStream;
 
+
+/*
+Credit to PaperMC for this idea
+ */
 @Mixin(PalettedContainer.class)
 public abstract class SyncPalettedContainerMixin<T> implements PaletteResizeListener<T>,
         ReadableContainer<T>  {

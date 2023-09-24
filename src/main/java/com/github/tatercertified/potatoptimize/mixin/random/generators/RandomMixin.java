@@ -31,9 +31,12 @@ public interface RandomMixin {
     /**
      * @author QPCrummer
      * @reason Use my implementation of ThreadLocalRandom
-     */
+     *
+     * This has been removed for now as it causes issues with chunk rebuilding!
+     *
     @Overwrite
     static Random create(long seed) {
         return new ThreadLocalRandomImpl(seed);
     }
+     */
 }
