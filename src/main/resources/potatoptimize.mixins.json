@@ -32,8 +32,7 @@
     "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
     "threading.entity_ticking.EntityServerThreadingMixin",
-    "threading.paletted_container.SyncPalettedContainerMixin",
-    "threading.thread_safe_chunks.ChunkAccessMixin"
+    "threading.paletted_container.SyncPalettedContainerMixin"
   ],
   "client": [
     "threading.client_tick.ClientTickMixin"

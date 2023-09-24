@@ -32,21 +32,6 @@ public class ThreadedTaskExecutor {
     }
 
     /**
-     * Runs a CompletableFuture
-     * @param future CompletableFuture
-     */
-    @Deprecated(forRemoval = true) // This isn't how futures work
-    public void executeThreadedFuture(CompletableFuture<?> future) {
-        this.executor.execute( () -> {
-            try {
-                future.get();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    /**
      * Runs "forEach" concurrently
      *
      * @param threshold Objects per thread
