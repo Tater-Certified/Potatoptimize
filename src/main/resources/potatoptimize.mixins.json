@@ -22,6 +22,8 @@
     "entity.statistics.PlayerEntityStatsMixin",
     "entity.ticking.LivingEntityMixin",
     "fastmath.joml.JOMLMixin",
+    "logic.fast_bits_blockpos.OptimizedBlockPosBitsMixin",
+    "logic.fast_bits_blockpos.OptimizedChunkSecPosBitsMixin",
     "logic.fast_rotations.EulerAngleMixin",
     "logic.reduce_ray_casting.BlockViewCastingMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",

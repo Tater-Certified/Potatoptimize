@@ -21,7 +21,7 @@ public abstract class ZombieEntityMixin extends HostileEntity {
 
     @Redirect(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"))
     private boolean cancelHalloweenCheck(ItemStack instance) {
-        if (((IsHalloweenInterface)this.getWorld()).isHalloween() && random.nextFloat() < 0.25f) {
+        if (((IsHalloweenInterface)this.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
             this.equipStack(EquipmentSlot.HEAD, new ItemStack(random.nextFloat() < 0.1f ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN));
             this.armorDropChances[EquipmentSlot.HEAD.getEntitySlotId()] = 0.0f;
         }

@@ -30,7 +30,7 @@ public abstract class BatEntityMixin extends AmbientEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void checkForHalloween(CallbackInfo ci) {
-        isNearHalloween = ((IsHalloweenInterface)this.getWorld()).isNearHalloween();
+        isNearHalloween = ((IsHalloweenInterface)this.getServer()).isNearHalloween();
     }
 
 }

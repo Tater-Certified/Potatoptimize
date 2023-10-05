@@ -1,52 +1,87 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.halloween;
 
 import com.github.tatercertified.potatoptimize.interfaces.IsHalloweenInterface;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import com.mojang.datafixers.DataFixer;
+import net.minecraft.resource.ResourcePackManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.SaveLoader;
+import net.minecraft.server.WorldGenerationProgressListenerFactory;
+import net.minecraft.util.ApiServices;
+import net.minecraft.world.level.storage.LevelStorage;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.net.Proxy;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.function.Supplier;
+import java.time.temporal.ChronoUnit;
 
-@Mixin(ServerWorld.class)
-public abstract class IsHalloweenMixin extends World implements IsHalloweenInterface {
+@Mixin(MinecraftServer.class)
+public abstract class IsHalloweenMixin implements IsHalloweenInterface {
 
+    @Shadow private long timeReference;
+    @Unique
     private boolean halloween;
+    @Unique
     private boolean nearHalloween;
-    private int counter;
+    @Unique
+    private long waitForHalloween;
+    @Unique
+    private long waitForHallowMonth;
 
-    protected IsHalloweenMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
+
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J", ordinal = 0, shift = At.Shift.AFTER))
+    private void hallowsEveCheck(CallbackInfo ci) {
+        checkForHalloween();
     }
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getTime()J"))
-    private long checkForHalloween(ServerWorld instance) {
-        if (counter >= 3600) {
-            counter = 0;
-            checkForHalloween();
-        }
-        counter++;
-        return this.getTime();
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void prepareHalloweenCheck(Thread serverThread, LevelStorage.Session session, ResourcePackManager dataPackManager, SaveLoader saveLoader, Proxy proxy, DataFixer dataFixer, ApiServices apiServices, WorldGenerationProgressListenerFactory worldGenerationProgressListenerFactory, CallbackInfo ci) {
+        this.runHalloweenTests();
     }
 
     @Unique
     private void checkForHalloween() {
-        LocalDate today = LocalDate.now();
+        if (this.timeReference > this.waitForHalloween) {
+            this.runHalloweenTests();
+        }
+
+        if (this.timeReference > this.waitForHallowMonth) {
+            this.runHalloweenTests();
+        }
+    }
+
+    @Unique
+    private void runHalloweenTests() {
+        LocalDateTime today = LocalDateTime.now();
         Month currentMonth = today.getMonth();
         int currentDayOfMonth = today.getDayOfMonth();
 
         this.nearHalloween = (currentMonth == Month.OCTOBER || currentMonth == Month.NOVEMBER) && (currentDayOfMonth >= 20 || currentDayOfMonth <= 3);
         this.halloween = this.nearHalloween && currentDayOfMonth == 31;
+
+        if (this.nearHalloween) {
+            this.waitForHallowMonth = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear(), 11, 4), today) + 50;
+        } else {
+            this.waitForHallowMonth = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear() + 1, 10, 20), today) + 50;
+        }
+
+        if (this.halloween) {
+            this.waitForHalloween = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear(), 11, 1), today) + 50;
+        } else {
+            this.waitForHalloween = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear() + 1, 10, 31), today) + 50;
+        }
+    }
+
+    @Unique
+    private long calculateMSTillDate(LocalDate date, LocalDateTime current) {
+        LocalDateTime targetDateTime = date.atStartOfDay();
+        return ChronoUnit.MILLIS.between(current, targetDateTime);
     }
 
     @Override
