@@ -30,6 +30,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0-rc.5")))
 }
 
 processResources {
