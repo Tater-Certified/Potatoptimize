@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.fast_rotations;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.EulerAngle;
@@ -7,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -28,12 +30,19 @@ public class EulerAngleMixin {
     @Mutable
     private static float roll;
 
-    @Inject(method = "<init>(FFF)V", at = @At("HEAD"), cancellable = true)
-    private static void fastConstructor(float pitch1, float yaw1, float roll1, CallbackInfo ci) {
-        pitch = pitch1;
-        yaw = yaw1;
-        roll = roll1;
-        ci.cancel();
+    @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;pitch:F"))
+    private void injectedPitch(EulerAngle instance, float value, @Local(ordinal = 0) float pitch) {
+        EulerAngleMixin.pitch = pitch;
+    }
+
+    @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;yaw:F"))
+    private void injectedYaw(EulerAngle instance, float value, @Local(ordinal = 0) float yaw) {
+        EulerAngleMixin.yaw = yaw;
+    }
+
+    @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;roll:F"))
+    private void injectedRoll(EulerAngle instance, float value, @Local(ordinal = 0) float roll) {
+        EulerAngleMixin.roll = roll;
     }
 
     /**
