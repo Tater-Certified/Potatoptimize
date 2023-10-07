@@ -5,11 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.github.tatercertified.potatoptimize.mixin.MixinConfig",
   "mixins": [
+    "block_entity.chest_chunk_loading.NoChestChunkLoadingMixin",
     "block_entity.sign_ticking.AbstractSignBlockMixin",
     "block_entity.sign_ticking.HangingSignMixin",
     "block_entity.sign_ticking.SignBlockEntityMixin",
     "block_entity.sign_ticking.WallHangingSignMixin",
     "entity.bat.BatLightCheckMixin",
+    "entity.bee.PreventLoadingChunksMixin",
     "entity.collisions.NetherPortalMixin",
     "entity.fall_damage.FixTntMinecartMixin",
     "entity.fall_damage.NoFallDamageMixin",
@@ -22,6 +24,7 @@
     "entity.spawning.SpawnHelperMixin",
     "entity.statistics.PlayerEntityStatsMixin",
     "entity.ticking.LivingEntityMixin",
+    "entity.villager.VillagerNoChunkLoadingMixin",
     "fastmath.joml.JOMLMixin",
     "item.map_chunk_loading.MapChunkLoadingMixin",
     "item.treasure_map_lookup.FilledMapItemMixin",
@@ -29,6 +32,9 @@
     "logic.fast_bits_blockpos.OptimizedBlockPosBitsMixin",
     "logic.fast_bits_blockpos.OptimizedChunkSecPosBitsMixin",
     "logic.fast_rotations.EulerAngleMixin",
+    "logic.main_thread.ExceptionHandlerInvoker",
+    "logic.main_thread.MinecraftServerThreadPriorityMixin",
+    "logic.main_thread.UtilClassMixin",
     "logic.reduce_ray_casting.BlockViewCastingMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
     "random.entity.RandomEntityMixin",
@@ -47,7 +53,8 @@
     "threading.paletted_container.SyncPalettedContainerMixin",
     "unstream.nearest_item.NearestItemSensorMixin",
     "unstream.nearest_item.NearestPlayersSensorMixin",
-    "unstream.pathfinding.PatchNodeNavigatorMixin"
+    "unstream.pathfinding.PatchNodeNavigatorMixin",
+    "world.explosion.OptimizedExplosionMixin"
   ],
   "client": [
     "threading.client_tick.ClientTickMixin"
