@@ -1,6 +1,5 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.reduce_ray_casting;
 
-import net.fabricmc.fabric.api.blockview.v2.FabricBlockView;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.hit.BlockHitResult;
@@ -24,7 +23,7 @@ import java.util.function.Function;
  */
 
 @Mixin(BlockView.class)
-public interface BlockViewCastingMixin extends HeightLimitView, FabricBlockView {
+public interface BlockViewCastingMixin extends HeightLimitView {
     @Shadow BlockState getBlockState(BlockPos pos);
 
     @Shadow @Nullable BlockHitResult raycastBlock(Vec3d start, Vec3d end, BlockPos pos, VoxelShape shape, BlockState state);
