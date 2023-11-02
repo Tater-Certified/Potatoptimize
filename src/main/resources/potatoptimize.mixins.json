@@ -39,6 +39,8 @@
     "logic.main_thread.MinecraftServerThreadPriorityMixin",
     "logic.main_thread.UtilClassMixin",
     "logic.reduce_ray_casting.BlockViewCastingMixin",
+    "logic.var_int.VarIntsMixin",
+    "logic.worker_thread.MCUtilMixin",
     "memory.memory_reserve.CrashMemoryReserveMixin",
     "random.entity.RandomEntityMixin",
     "random.generators.ChunkRandomMixin",
