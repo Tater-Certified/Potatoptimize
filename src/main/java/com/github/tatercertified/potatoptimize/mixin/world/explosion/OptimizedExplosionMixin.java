@@ -23,13 +23,16 @@ import java.util.List;
 public class OptimizedExplosionMixin {
     @Shadow @Final private World world;
 
+    public OptimizedExplosionMixin() {
+    }
+
     @Redirect(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;"))
     private FluidState redirectFluidState(World instance, BlockPos pos, @Local(ordinal = 0) BlockState blockState) {
         return blockState.getFluidState();
     }
 
     @Redirect(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List;"))
-    private List optimizeGetEntities(World instance, Entity entity, Box box, @Local(ordinal = 0) int k, @Local(ordinal = 0) int r, @Local(ordinal = 0) int t, @Local(ordinal = 0) int l, @Local(ordinal = 0) int s, @Local(ordinal = 0) int u) {
+    private List<Entity> optimizeGetEntities(World instance, Entity entity, Box box, @Local(ordinal = 0) int k, @Local(ordinal = 0) int r, @Local(ordinal = 0) int t, @Local(ordinal = 0) int l, @Local(ordinal = 0) int s, @Local(ordinal = 0) int u) {
         return this.world.getOtherEntities(entity, new Box(k, r, t, l, s, u), (com.google.common.base.Predicate<Entity>) entity1 -> entity1.isAlive() && !entity1.isSpectator());
     }
 }

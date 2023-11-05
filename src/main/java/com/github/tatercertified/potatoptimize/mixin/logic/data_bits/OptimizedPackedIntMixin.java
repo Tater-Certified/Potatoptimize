@@ -14,12 +14,10 @@ public class OptimizedPackedIntMixin {
     @Shadow @Final private int indexScale;
     @Shadow @Final private int indexOffset;
     @Shadow @Final private int indexShift;
-    @Shadow @Final private long[] data;
-    @Shadow @Final private int elementsPerLong;
-    @Shadow @Final private int elementBits;
-    @Shadow @Final private long maxValue;
+    @Unique
     @Final @Mutable
     private long indexScaleUnsigned;
+    @Unique
     @Final @Mutable
     private long indexOffsetUnsigned;
 
@@ -41,47 +39,4 @@ public class OptimizedPackedIntMixin {
     private int getStorageIndex(int index) {
         return (int) ((long) index * this.indexScaleUnsigned + this.indexOffsetUnsigned >> 32 >> this.indexShift);
     }
-
-    /**
-     * @author QPCrummer
-     * @reason Simplify
-     */
-    @Overwrite
-    @Final
-    public int swap(int index, int value) {
-        int i = this.getStorageIndex(index);
-        long l = this.data[i];
-        int j = (index - i * this.elementsPerLong) * this.elementBits;
-        int k = (int)(l >> j & this.maxValue);
-        this.data[i] = l & ~(this.maxValue << j) | ((long)value & this.maxValue) << j;
-        return k;
-    }
-
-    /**
-     * @author QPCrummer
-     * @reason Simplify
-     */
-    @Overwrite
-    @Final
-    public void set(int index, int value) {
-        int i = this.getStorageIndex(index);
-        long l = this.data[i];
-        int j = (index - i * this.elementsPerLong) * this.elementBits;
-        this.data[i] = l & ~(this.maxValue << j) | ((long)value & this.maxValue) << j;
-    }
-
-    /**
-     * @author QPCrummer
-     * @reason Simplify
-     */
-    @Overwrite
-    @Final
-    public int get(int index) {
-        int i = this.getStorageIndex(index);
-        long l = this.data[i];
-        int j = (index - i * this.elementsPerLong) * this.elementBits;
-        return (int)(l >> j & this.maxValue);
-    }
-
-
 }

@@ -29,5 +29,10 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": ">=1.20"
+  },
+  "custom": {
+    "lithium:options": {
+      "world.explosions": false
+    }
   }
 }

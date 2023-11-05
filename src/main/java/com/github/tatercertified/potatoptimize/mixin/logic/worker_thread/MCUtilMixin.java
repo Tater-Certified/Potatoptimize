@@ -31,48 +31,48 @@ public abstract class MCUtilMixin {
     @Overwrite
     private static ExecutorService createWorker(String name) {
         int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, getMaxBackgroundThreads());
-        Object executorService;
+        ExecutorService executorService;
         if (i <= 0) {
             executorService = MoreExecutors.newDirectExecutorService();
         } else {
-            executorService = Integer.getInteger("Paper.WorkerThreadCount", i) <= 0 ? MoreExecutors.newDirectExecutorService() : new AbstractExecutorService() {
+            executorService = new AbstractExecutorService() {
                 private volatile boolean shutdown = false;
 
                 @Override
-                public final List<Runnable> shutdownNow() {
+                public List<Runnable> shutdownNow() {
                     this.shutdown = true;
                     return Collections.emptyList();
                 }
 
                 @Override
-                public final void shutdown() {
+                public void shutdown() {
                     this.shutdown = true;
                 }
 
                 @Override
-                public final boolean isShutdown() {
+                public boolean isShutdown() {
                     return this.shutdown;
                 }
 
                 @Override
-                public final boolean isTerminated() {
+                public boolean isTerminated() {
                     return this.shutdown;
                 }
 
                 @Override
-                public final boolean awaitTermination(long l2, @NotNull TimeUnit timeUnit) {
+                public boolean awaitTermination(long l2, @NotNull TimeUnit timeUnit) {
                     if (!this.shutdown) {
                         throw new UnsupportedOperationException();
                     }
                     return true;
                 }
                 @Override
-                public final void execute(@NotNull Runnable runnable) {
+                public void execute(@NotNull Runnable runnable) {
                     ThreadUtils.asyncExecutor.execute(new ServerWorkerThreadWrapper(runnable));
                 }
             };
         }
 
-        return (ExecutorService)executorService;
+        return executorService;
     }
 }

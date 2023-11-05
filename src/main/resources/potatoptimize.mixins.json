@@ -30,7 +30,6 @@
     "item.map_chunk_loading.MapChunkLoadingMixin",
     "item.treasure_map_lookup.FilledMapItemMixin",
     "logic.chunk_query.ChunkQueryMixin",
-    "logic.data_bits.OptimizedEmptyPalletteMixin",
     "logic.data_bits.OptimizedPackedIntMixin",
     "logic.fast_bits_blockpos.OptimizedBlockPosBitsMixin",
     "logic.fast_bits_blockpos.OptimizedChunkSecPosBitsMixin",
@@ -55,11 +54,11 @@
     "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
     "threading.entity_ticking.EntityServerThreadingMixin",
-    "threading.paletted_container.SyncPalettedContainerMixin",
     "unstream.nearest_item.NearestItemSensorMixin",
     "unstream.nearest_item.NearestPlayersSensorMixin",
     "unstream.pathfinding.PatchNodeNavigatorMixin",
-    "world.explosion.OptimizedExplosionMixin"
+    "world.explosion.OptimizedExplosionMixin",
+    "world.explosion.OverrideLithiumExplosionMixin"
   ],
   "client": [
     "threading.client_tick.ClientTickMixin"
