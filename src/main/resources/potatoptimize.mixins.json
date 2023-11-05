@@ -20,6 +20,8 @@
     "entity.halloween.IsHalloweenMixin",
     "entity.halloween.SkeletonEntityMixin",
     "entity.halloween.ZombieEntityMixin",
+    "entity.item_merging.ItemMergingTrackingMixin",
+    "entity.item_merging.ItemTrackingMixin",
     "entity.navigation.CancelNavigationMixin",
     "entity.pathfinding.MobPathfindingMixin",
     "entity.spawning.SpawnHelperMixin",
@@ -27,6 +29,9 @@
     "entity.ticking.LivingEntityMixin",
     "entity.villager.VillagerNoChunkLoadingMixin",
     "fastmath.joml.JOMLMixin",
+    "fastmath.rounding.FastRoundingPlayerMixin",
+    "fastmath.rounding.FastRoundingSurfaceBuildMixin",
+    "fastmath.rounding.FastRoundingVoxShapeMixin",
     "item.map_chunk_loading.MapChunkLoadingMixin",
     "item.treasure_map_lookup.FilledMapItemMixin",
     "logic.chunk_query.ChunkQueryMixin",
@@ -57,10 +62,14 @@
     "unstream.nearest_item.NearestItemSensorMixin",
     "unstream.nearest_item.NearestPlayersSensorMixin",
     "unstream.pathfinding.PatchNodeNavigatorMixin",
+    "unstream.player_movement.PlayerMovementMixin",
+    "world.biome_access.BiomeAccessMixin",
     "world.explosion.OptimizedExplosionMixin",
     "world.explosion.OverrideLithiumExplosionMixin"
   ],
   "client": [
+    "fastmath.rounding.FastRoundingDebugRenderMixin",
+    "fastmath.rounding.FastRoundingQuadsMixin",
     "threading.client_tick.ClientTickMixin"
   ],
   "injectors": {
