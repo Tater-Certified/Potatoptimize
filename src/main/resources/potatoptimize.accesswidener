@@ -1,10 +1,17 @@
 accessWidener	v1	named
 
-accessible class net/minecraft/world/chunk/PalettedContainer$Data
-accessible method net/minecraft/world/chunk/PalettedContainer$Data importFrom (Lnet/minecraft/world/chunk/Palette;Lnet/minecraft/util/collection/PaletteStorage;)V
 accessible field net/minecraft/world/chunk/PalettedContainer$Data palette Lnet/minecraft/world/chunk/Palette;
 accessible field net/minecraft/world/chunk/PalettedContainer$Data storage Lnet/minecraft/util/collection/PaletteStorage;
+
+accessible method net/minecraft/world/chunk/PalettedContainer$Data importFrom (Lnet/minecraft/world/chunk/Palette;Lnet/minecraft/util/collection/PaletteStorage;)V
 accessible method net/minecraft/world/chunk/PalettedContainer$Data writePacket (Lnet/minecraft/network/PacketByteBuf;)V
 accessible method net/minecraft/world/chunk/PalettedContainer applyEach ([ILjava/util/function/IntUnaryOperator;)V
 accessible method net/minecraft/world/chunk/PalettedContainer$PaletteProvider getBits (Lnet/minecraft/util/collection/IndexedIterable;I)I
+
 accessible class net/minecraft/world/chunk/PaletteResizeListener
+accessible class net/minecraft/server/rcon/QueryResponseHandler$Query
+accessible class net/minecraft/world/chunk/PalettedContainer$Data
+accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker
+accessible class net/minecraft/block/ComposterBlock$ComposterInventory
+accessible class net/minecraft/block/ComposterBlock$DummyInventory
+accessible class net/minecraft/block/ComposterBlock$FullComposterInventory

@@ -2,17 +2,19 @@ package com.github.tatercertified.potatoptimize.mixin.logic.main_thread;
 
 import com.github.tatercertified.potatoptimize.utils.ServerMinionThread;
 import net.minecraft.util.Util;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(Util.class)
 public class UtilClassMixin {
-    @Shadow @Final private final static ExecutorService MAIN_WORKER_EXECUTOR = createWorker("Main", -1);
+    // TODO Determine the hit to performance of this by making it not final
+    @Shadow @Final @Mutable
+    private final static ExecutorService MAIN_WORKER_EXECUTOR = createWorker("Main", -1);
 
     @Unique
     private static ExecutorService createWorker(String name, int priorityModifier) {

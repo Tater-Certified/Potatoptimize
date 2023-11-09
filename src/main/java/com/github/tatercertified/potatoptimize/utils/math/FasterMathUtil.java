@@ -33,4 +33,14 @@ public class FasterMathUtil {
             return (long) a;
         }
     }
+
+    public static float positiveModuloForPositiveIntegerDivisor(float dividend, float divisor) {
+        var modulo = dividend % divisor;
+        return modulo < 0 ? modulo + divisor : modulo;
+    }
+
+    public static double positiveModuloForPositiveIntegerDivisor(double dividend, double divisor) {
+        var modulo = dividend % divisor;
+        return modulo < 0 ? modulo + divisor : modulo;
+    }
 }

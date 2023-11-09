@@ -32,7 +32,9 @@
   },
   "custom": {
     "lithium:options": {
-      "world.explosions": false
+      "world.explosions": false,
+      "alloc.composter": false,
+      "alloc.enum_values.living_entity": false
     }
   }
 }
