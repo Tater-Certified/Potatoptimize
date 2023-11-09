@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin;
 
 import com.github.tatercertified.potatoptimize.Potatoptimize;
+import com.github.tatercertified.potatoptimize.config.ModCompatibility;
 import com.github.tatercertified.potatoptimize.config.Option;
 import com.github.tatercertified.potatoptimize.config.PotatoptimizeConfig;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,8 @@ public class MixinConfig implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
+        ModCompatibility.prepareMixins();
+
         try {
             this.config = PotatoptimizeConfig.load(new File("./config/potatoptimize.properties"));
         } catch (Exception e) {
@@ -73,6 +76,11 @@ public class MixinConfig implements IMixinConfigPlugin {
                 this.logger.warn("Force-disabling mixin '{}' as rule '{}' (added by {}) disables it and children", mixin,
                         option.getName(), source);
             }
+        }
+
+        // Mod compatibility override
+        if (ModCompatibility.testFor(option.getName())) {
+            return false;
         }
 
         return option.isEnabled();
