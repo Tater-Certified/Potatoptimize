@@ -3,10 +3,7 @@ package com.github.tatercertified.potatoptimize.mixin.random.math;
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,7 +14,9 @@ import java.util.UUID;
 @Mixin(MathHelper.class)
 public class RandomMathHelperMixin {
 
-    @Mutable @Shadow @Final private static Random RANDOM = new ThreadLocalRandomImpl();
+    //TODO Determine the impact of having RANDOM Shadowed and not final
+    @Unique
+    private static Random RANDOM = new ThreadLocalRandomImpl();
 
     @Inject(method = "nextGaussian", at = @At("HEAD"), cancellable = true)
     private static void optimizedGaussian(Random random, float mean, float deviation, CallbackInfoReturnable<Float> cir) {

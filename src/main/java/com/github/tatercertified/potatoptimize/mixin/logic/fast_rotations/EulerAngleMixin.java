@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Credit to PaperMC patch #0565
  */
+//TODO Rewrite this so that pitch, yaw, and roll can be inlined properly
 @Mixin(EulerAngle.class)
 public class EulerAngleMixin {
 

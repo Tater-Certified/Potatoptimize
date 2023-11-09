@@ -27,19 +27,19 @@ public abstract class OptimizedChunkSecPosBitsMixin extends Vec3i {
      * @author QPCrummer
      * @reason Inline
      */
-    //@Overwrite
-    //public static ChunkSectionPos from(BlockPos pos) {
-    //    return new ChunkSectionPos(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
-    //}
+    @Overwrite
+    public static ChunkSectionPos from(BlockPos pos) {
+        return ChunkSectionPosAccessor.invokeChunkSectionPos(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
+    }
 
     /**
      * @author QPCrummer
      * @reason Inline
      */
-    //@Overwrite
-    //public static ChunkSectionPos from(long packed) {
-    //    return new ChunkSectionPos((int) (packed >> 42), (int) (packed << 44 >> 44), (int) (packed << 22 >> 42));
-    //}
+    @Overwrite
+    public static ChunkSectionPos from(long packed) {
+        return ChunkSectionPosAccessor.invokeChunkSectionPos((int) (packed >> 42), (int) (packed << 44 >> 44), (int) (packed << 22 >> 42));
+    }
 
     /**
      * @author QPCrummer

@@ -39,6 +39,7 @@
     "item.treasure_map_lookup.FilledMapItemMixin",
     "logic.chunk_query.ChunkQueryMixin",
     "logic.data_bits.OptimizedPackedIntMixin",
+    "logic.fast_bits_blockpos.ChunkSectionPosAccessor",
     "logic.fast_bits_blockpos.OptimizedBlockPosBitsMixin",
     "logic.fast_bits_blockpos.OptimizedChunkSecPosBitsMixin",
     "logic.fast_rotations.EulerAngleMixin",

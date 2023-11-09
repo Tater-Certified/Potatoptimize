@@ -26,7 +26,7 @@ public class CacheBlockBreakPacketMixin {
     }
 
     @Redirect(method = "setBlockBreakingInfo", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
-    private void redirectPacketSent(ServerPlayNetworkHandler instance, Packet packetBad, @Local(ordinal = 0) int entityId, @Local(ordinal = 0) BlockPos pos, @Local(ordinal = 0) int progress, @Local(ordinal = 0)ServerPlayerEntity serverPlayerEntity) {
+    private void redirectPacketSent(ServerPlayNetworkHandler instance, Packet<?> packetBad, @Local(ordinal = 0) int entityId, @Local(ordinal = 0) BlockPos pos, @Local(ordinal = 0) int progress, @Local(ordinal = 0)ServerPlayerEntity serverPlayerEntity) {
         if (this.packet == null) this.packet = new BlockBreakingProgressS2CPacket(entityId, pos, progress);
         serverPlayerEntity.networkHandler.sendPacket(this.packet);
     }

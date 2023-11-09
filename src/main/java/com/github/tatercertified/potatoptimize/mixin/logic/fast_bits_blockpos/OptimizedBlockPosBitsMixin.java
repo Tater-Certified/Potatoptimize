@@ -1,23 +1,14 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.fast_bits_blockpos;
 
 import net.minecraft.util.math.BlockPos;
-import org.spongepowered.asm.mixin.*;
-
-import static net.minecraft.util.math.BlockPos.asLong;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 
 /**
  * Credit to PaperMC Patch #0421
  */
 @Mixin(BlockPos.class)
 public class OptimizedBlockPosBitsMixin {
-    @Shadow @Final private static final int SIZE_BITS_X = 26;
-    @Shadow @Final private static final int SIZE_BITS_Z = 26;
-    @Shadow @Final public static final int SIZE_BITS_Y = 12;
-    @Shadow @Final private static final long BITS_X = 67108863;
-    @Shadow @Final private static final long BITS_Y = 4095;
-    @Shadow @Final private static final long BITS_Z = 67108863;
-    @Shadow @Final private static final int BIT_SHIFT_Z = 12;
-    @Shadow @Final private static final int BIT_SHIFT_X = 38;
 
     /**
      * @author QPCrummer
