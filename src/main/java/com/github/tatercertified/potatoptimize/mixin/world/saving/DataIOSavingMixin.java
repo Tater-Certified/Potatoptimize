@@ -42,7 +42,7 @@ public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
 
             Runnable writeRunnable = () -> {
                 try {
-                    NbtIo.writeCompressed(compoundTag, file);
+                    NbtIo.writeCompressed(compoundTag, file.toPath());
                 } catch (IOException var4) {
                     ExceptionHandlerInvoker.getLogger().error("Could not save data {}", this, var4);
                 }

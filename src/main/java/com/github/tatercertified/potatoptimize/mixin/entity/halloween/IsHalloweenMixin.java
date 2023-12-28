@@ -23,8 +23,7 @@ import java.time.temporal.ChronoUnit;
 
 @Mixin(MinecraftServer.class)
 public abstract class IsHalloweenMixin implements IsHalloweenInterface {
-
-    @Shadow private long timeReference;
+    @Shadow private long tickStartTimeNanos;
     @Unique
     private boolean halloween;
     @Unique
@@ -35,7 +34,7 @@ public abstract class IsHalloweenMixin implements IsHalloweenInterface {
     private long waitForHallowMonth;
 
 
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J", ordinal = 0, shift = At.Shift.AFTER))
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeNano()J", ordinal = 0, shift = At.Shift.AFTER))
     private void hallowsEveCheck(CallbackInfo ci) {
         checkForHalloween();
     }
@@ -47,11 +46,11 @@ public abstract class IsHalloweenMixin implements IsHalloweenInterface {
 
     @Unique
     private void checkForHalloween() {
-        if (this.timeReference > this.waitForHalloween) {
+        if (this.tickStartTimeNanos > this.waitForHalloween) {
             this.runHalloweenTests();
         }
 
-        if (this.timeReference > this.waitForHallowMonth) {
+        if (this.tickStartTimeNanos > this.waitForHallowMonth) {
             this.runHalloweenTests();
         }
     }
@@ -66,22 +65,22 @@ public abstract class IsHalloweenMixin implements IsHalloweenInterface {
         this.halloween = this.nearHalloween && currentDayOfMonth == 31;
 
         if (this.nearHalloween) {
-            this.waitForHallowMonth = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear(), 11, 4), today) + 50;
+            this.waitForHallowMonth = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 4), today) + 50;
         } else {
-            this.waitForHallowMonth = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear() + 1, 10, 20), today) + 50;
+            this.waitForHallowMonth = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 20), today) + 50;
         }
 
         if (this.halloween) {
-            this.waitForHalloween = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear(), 11, 1), today) + 50;
+            this.waitForHalloween = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 1), today) + 50;
         } else {
-            this.waitForHalloween = this.timeReference + calculateMSTillDate(LocalDate.of(today.getYear() + 1, 10, 31), today) + 50;
+            this.waitForHalloween = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 31), today) + 50;
         }
     }
 
     @Unique
-    private long calculateMSTillDate(LocalDate date, LocalDateTime current) {
+    private long calculateNSTillDate(LocalDate date, LocalDateTime current) {
         LocalDateTime targetDateTime = date.atStartOfDay();
-        return ChronoUnit.MILLIS.between(current, targetDateTime);
+        return ChronoUnit.NANOS.between(current, targetDateTime);
     }
 
     @Override
