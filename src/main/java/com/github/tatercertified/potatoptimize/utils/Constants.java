@@ -1,15 +1,14 @@
 package com.github.tatercertified.potatoptimize.utils;
 
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.server.world.ServerWorld;
 
 // Credit to Titanium Town
 
 /**
- * This class is used to reduce array allocations and improve memory usage
+ * This class is used to reduce allocations and improve memory usage
  */
-public final class ArrayConstants {
-    private ArrayConstants() {}
+public final class Constants {
+    private Constants() {}
 
     public static final int[] emptyIntArray = new int[0];
     public static final int[] zeroSingletonIntArray = new int[]{0};

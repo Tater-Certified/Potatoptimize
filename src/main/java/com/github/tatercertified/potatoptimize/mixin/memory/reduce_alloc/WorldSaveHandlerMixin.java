@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.memory.reduce_alloc;
 
-import com.github.tatercertified.potatoptimize.utils.ArrayConstants;
+import com.github.tatercertified.potatoptimize.utils.Constants;
 import net.minecraft.world.WorldSaveHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public class WorldSaveHandlerMixin {
     public String[] getSavedPlayerIds() {
         String[] strings = this.playerDataDir.list();
         if (strings == null) {
-            strings = ArrayConstants.emptyStringArray;
+            strings = Constants.emptyStringArray;
         }
 
         for(int i = 0; i < strings.length; ++i) {

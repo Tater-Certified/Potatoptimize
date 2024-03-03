@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.memory.reduce_alloc;
 
-import com.github.tatercertified.potatoptimize.utils.ArrayConstants;
+import com.github.tatercertified.potatoptimize.utils.Constants;
 import net.minecraft.scoreboard.AbstractTeam;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +19,6 @@ public class AbstractTeamMixin {
      */
     @Overwrite
     public static String[] getKeys() {
-        return VISIBILITY_RULES.keySet().toArray(ArrayConstants.emptyStringArray);
+        return VISIBILITY_RULES.keySet().toArray(Constants.emptyStringArray);
     }
 }

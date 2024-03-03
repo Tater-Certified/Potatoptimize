@@ -4,7 +4,7 @@ package com.github.tatercertified.potatoptimize.utils.math;
  * @author jafama library
  * https://github.com/jeffhain/jafama
  */
-public class FasterMathUtil {
+public final class FasterMathUtil {
     private static final int MAX_FLOAT_EXPONENT = 127;
     private static final int MAX_DOUBLE_EXPONENT = 1023;
 

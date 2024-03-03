@@ -15,3 +15,4 @@ accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTrac
 accessible class net/minecraft/block/ComposterBlock$ComposterInventory
 accessible class net/minecraft/block/ComposterBlock$DummyInventory
 accessible class net/minecraft/block/ComposterBlock$FullComposterInventory
+accessible class net/minecraft/util/shape/PairList

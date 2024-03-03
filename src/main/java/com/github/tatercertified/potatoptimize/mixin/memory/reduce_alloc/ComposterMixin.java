@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.memory.reduce_alloc;
 
-import com.github.tatercertified.potatoptimize.utils.ArrayConstants;
+import com.github.tatercertified.potatoptimize.utils.Constants;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public class ComposterMixin {
      */
     @Overwrite
     public int[] getAvailableSlots(Direction side) {
-        return side == Direction.UP ? ArrayConstants.zeroSingletonIntArray : ArrayConstants.emptyIntArray;
+        return side == Direction.UP ? Constants.zeroSingletonIntArray : Constants.emptyIntArray;
     }
 }
 

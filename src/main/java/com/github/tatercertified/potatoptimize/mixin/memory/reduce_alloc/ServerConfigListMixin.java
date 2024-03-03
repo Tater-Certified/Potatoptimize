@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.memory.reduce_alloc;
 
-import com.github.tatercertified.potatoptimize.utils.ArrayConstants;
+import com.github.tatercertified.potatoptimize.utils.Constants;
 import net.minecraft.server.ServerConfigList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class ServerConfigListMixin<V> {
      */
     @Overwrite
     public String[] getNames() {
-        return this.map.keySet().toArray(ArrayConstants.emptyStringArray);
+        return this.map.keySet().toArray(Constants.emptyStringArray);
     }
 
 

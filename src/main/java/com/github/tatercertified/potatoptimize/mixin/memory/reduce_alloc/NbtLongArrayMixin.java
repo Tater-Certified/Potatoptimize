@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.memory.reduce_alloc;
 
-import com.github.tatercertified.potatoptimize.utils.ArrayConstants;
+import com.github.tatercertified.potatoptimize.utils.Constants;
 import net.minecraft.nbt.NbtLongArray;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -17,6 +17,6 @@ public class NbtLongArrayMixin {
      */
     @Overwrite
     public void clear() {
-        this.value = ArrayConstants.emptyLongArray;
+        this.value = Constants.emptyLongArray;
     }
 }
