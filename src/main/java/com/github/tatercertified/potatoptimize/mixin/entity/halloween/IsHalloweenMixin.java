@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.halloween;
 
-import com.github.tatercertified.potatoptimize.interfaces.IsHalloweenInterface;
+import com.github.tatercertified.potatoptimize.utils.interfaces.IsHalloweenInterface;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.server.MinecraftServer;

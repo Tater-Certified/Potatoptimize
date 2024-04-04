@@ -1,4 +1,4 @@
-package com.github.tatercertified.potatoptimize.interfaces;
+package com.github.tatercertified.potatoptimize.utils.interfaces;
 
 public interface WorldInterface {
     void submitRunnableToExecutor(Runnable runnable);

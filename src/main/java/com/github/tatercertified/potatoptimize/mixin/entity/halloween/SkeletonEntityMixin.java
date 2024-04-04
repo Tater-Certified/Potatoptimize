@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.halloween;
 
-import com.github.tatercertified.potatoptimize.interfaces.IsHalloweenInterface;
+import com.github.tatercertified.potatoptimize.utils.interfaces.IsHalloweenInterface;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;

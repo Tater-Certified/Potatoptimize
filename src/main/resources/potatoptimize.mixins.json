@@ -19,8 +19,6 @@
     "entity.halloween.IsHalloweenMixin",
     "entity.halloween.SkeletonEntityMixin",
     "entity.halloween.ZombieEntityMixin",
-    "entity.item_merging.ItemMergingTrackingMixin",
-    "entity.item_merging.ItemTrackingMixin",
     "entity.navigation.CancelNavigationMixin",
     "entity.pathfinding.MobPathfindingMixin",
     "entity.spawning.SpawnHelperMixin",

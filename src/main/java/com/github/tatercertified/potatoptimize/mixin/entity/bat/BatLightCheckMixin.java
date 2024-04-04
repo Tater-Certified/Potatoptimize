@@ -21,7 +21,7 @@ public class BatLightCheckMixin {
     }
 
     @Inject(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextInt(I)I"), cancellable = true)
-    private static void readdLightCheck(EntityType<BatEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 0) int j) {
+    private static void readdLightCheck(EntityType<BatEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 1) int j) {
         if (world.getLightLevel(pos) > random.nextInt(j)) {
             cir.setReturnValue(false);
         }

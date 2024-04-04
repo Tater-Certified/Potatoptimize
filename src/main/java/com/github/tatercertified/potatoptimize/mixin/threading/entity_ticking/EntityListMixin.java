@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.threading.entity_ticking;
 
-import com.github.tatercertified.potatoptimize.interfaces.ServerEntityThreadInterface;
+import com.github.tatercertified.potatoptimize.utils.interfaces.ServerEntityThreadInterface;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.EntityList;
 import org.spongepowered.asm.mixin.Mixin;

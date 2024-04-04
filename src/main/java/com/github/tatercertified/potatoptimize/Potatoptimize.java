@@ -1,7 +1,6 @@
 package com.github.tatercertified.potatoptimize;
 
 import com.github.tatercertified.potatoptimize.config.PotatoptimizeConfig;
-import math.fast.SpeedyMath;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
@@ -22,9 +21,6 @@ public class Potatoptimize implements ModInitializer {
         if (CONFIG == null) {
             throw new IllegalStateException("The mixin plugin did not initialize the config! Did it not load?");
         }
-
-        // Generate Sin/Cos tables
-        // SpeedyMath.cos(90);
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> almightyServerInstance = server);
     }

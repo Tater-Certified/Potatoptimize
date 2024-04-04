@@ -1,6 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.threading.entity_ticking;
 
-import com.github.tatercertified.potatoptimize.interfaces.ServerEntityThreadInterface;
+import com.github.tatercertified.potatoptimize.utils.interfaces.ServerEntityThreadInterface;
 import com.github.tatercertified.potatoptimize.utils.threading.ThreadedTaskExecutor;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.resource.ResourcePackManager;
