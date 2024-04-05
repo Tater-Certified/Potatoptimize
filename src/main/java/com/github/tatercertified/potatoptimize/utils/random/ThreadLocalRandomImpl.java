@@ -8,7 +8,9 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThreadLocalRandomImpl implements PotatoptimizedRandom {
-    private final ThreadLocalRandom random = ThreadLocalRandom.current();;
+    private final ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    public static final Random INSTANCE = new ThreadLocalRandomImpl();
     public ThreadLocalRandomImpl() {
     }
 

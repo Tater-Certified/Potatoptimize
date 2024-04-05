@@ -99,7 +99,7 @@
     "world.biome_access.BiomeAccessMixin",
     "world.blending.BlendMixin",
     "world.explosion.OptimizedExplosionMixin",
-    "world.explosion.OverrideLithiumExplosionMixin",
+    "world.farmland.FarmlandBlockMixin",
     "world.saving.DataIOSavingMixin",
     "world.saving.PersistentStateManagerMixin",
     "world.saving.ServerWorldSavingMixin"

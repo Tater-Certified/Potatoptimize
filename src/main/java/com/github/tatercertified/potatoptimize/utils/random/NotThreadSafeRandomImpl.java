@@ -16,6 +16,8 @@ public class NotThreadSafeRandomImpl implements PotatoptimizedRandom {
     private final long mask = (1L << 48) - 1;
     private long seed;
 
+    public static final Random INSTANCE = new NotThreadSafeRandomImpl();
+
     public NotThreadSafeRandomImpl(long seed) {
         this.seed = seed;
     }
