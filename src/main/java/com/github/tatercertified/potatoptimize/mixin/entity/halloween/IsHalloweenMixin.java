@@ -7,9 +7,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.SaveLoader;
 import net.minecraft.server.WorldGenerationProgressListenerFactory;
 import net.minecraft.util.ApiServices;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelStorage;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +23,6 @@ import java.time.temporal.ChronoUnit;
 
 @Mixin(MinecraftServer.class)
 public abstract class IsHalloweenMixin implements IsHalloweenInterface {
-    @Shadow private long tickStartTimeNanos;
     @Unique
     private boolean halloween;
     @Unique
@@ -41,22 +40,24 @@ public abstract class IsHalloweenMixin implements IsHalloweenInterface {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void prepareHalloweenCheck(Thread serverThread, LevelStorage.Session session, ResourcePackManager dataPackManager, SaveLoader saveLoader, Proxy proxy, DataFixer dataFixer, ApiServices apiServices, WorldGenerationProgressListenerFactory worldGenerationProgressListenerFactory, CallbackInfo ci) {
-        this.runHalloweenTests();
+        this.runHalloweenTests(Util.getMeasuringTimeNano());
     }
 
     @Unique
     private void checkForHalloween() {
-        if (this.tickStartTimeNanos > this.waitForHalloween) {
-            this.runHalloweenTests();
+        long tickStartTimeNanos = Util.getMeasuringTimeNano();
+
+        if (tickStartTimeNanos > this.waitForHalloween) {
+            this.runHalloweenTests(tickStartTimeNanos);
         }
 
-        if (this.tickStartTimeNanos > this.waitForHallowMonth) {
-            this.runHalloweenTests();
+        if (tickStartTimeNanos > this.waitForHallowMonth) {
+            this.runHalloweenTests(tickStartTimeNanos);
         }
     }
 
     @Unique
-    private void runHalloweenTests() {
+    private void runHalloweenTests(long tickStartTimeNanos) {
         LocalDateTime today = LocalDateTime.now();
         Month currentMonth = today.getMonth();
         int currentDayOfMonth = today.getDayOfMonth();
@@ -65,15 +66,15 @@ public abstract class IsHalloweenMixin implements IsHalloweenInterface {
         this.halloween = this.nearHalloween && currentDayOfMonth == 31;
 
         if (this.nearHalloween) {
-            this.waitForHallowMonth = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 4), today) + 50;
+            this.waitForHallowMonth = tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 4), today) + 50;
         } else {
-            this.waitForHallowMonth = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 20), today) + 50;
+            this.waitForHallowMonth = tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 20), today) + 50;
         }
 
         if (this.halloween) {
-            this.waitForHalloween = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 1), today) + 50;
+            this.waitForHalloween = tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear(), 11, 1), today) + 50;
         } else {
-            this.waitForHalloween = this.tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 31), today) + 50;
+            this.waitForHalloween = tickStartTimeNanos + calculateNSTillDate(LocalDate.of(today.getYear() + 1, 10, 31), today) + 50;
         }
     }
 
