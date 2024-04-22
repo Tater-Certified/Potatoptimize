@@ -35,5 +35,8 @@
       "alloc.composter": false,
       "alloc.enum_values.living_entity": false
     }
+  },
+  "recommends": {
+    "lithium": "*"
   }
 }

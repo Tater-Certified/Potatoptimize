@@ -21,7 +21,7 @@ public final class ModCompatibility {
         addModCompatibility("chronos-carpet-addons", "ChronosCarpetAddons", new String[] {"mixin.entity.collisions"});
         addModCompatibility("faster-random", "FasterRandom", new String[] {"mixin.random.entity", "mixin.random.math", "mixin.random.world"});
         addModCompatibility("c2me", "C2me", new String[] {"mixin.world.saving"});
-        addModCompatibility("lithium", "Lithium", new String[] {"mixin.world.explosion"});
+        addModCompatibility("lithium", "Lithium", new String[] {"mixin.world.explosion", "mixin.entity.villager_task"});
     }
 
     private static void addModCompatibility(String modId, String visualName, String[] mixins) {

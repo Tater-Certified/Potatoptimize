@@ -29,6 +29,7 @@
     "entity.teleport.SmoothTeleportPlayerMixin",
     "entity.ticking.LivingEntityMixin",
     "entity.villager.VillagerNoChunkLoadingMixin",
+    "entity.villager_task.VillagerTasksMixin",
     "fastmath.intrinsic.MathHelperIntrinsicMixin",
     "fastmath.joml.JOMLMixin",
     "fastmath.rounding.FastRoundingPlayerMixin",
@@ -47,6 +48,7 @@
     "logic.main_thread.ExceptionHandlerInvoker",
     "logic.main_thread.MinecraftServerThreadPriorityMixin",
     "logic.main_thread.UtilClassMixin",
+    "logic.recipe_manager.RecipeManagerMixin",
     "logic.reduce_ray_casting.BlockViewCastingMixin",
     "logic.shape.SimplePairListMixin",
     "logic.shape.VoxelShapesMixin",
@@ -91,10 +93,14 @@
     "startup.dfu.DFUMixin",
     "threading.entity_ticking.EntityListMixin",
     "threading.entity_ticking.EntityServerThreadingMixin",
+    "threading.explosions.AsyncExplosionMixin",
+    "threading.explosions.ExplosionThreadStopMixin",
     "unstream.nearest_item.NearestItemSensorMixin",
     "unstream.nearest_item.NearestPlayersSensorMixin",
     "unstream.pathfinding.PatchNodeNavigatorMixin",
     "unstream.player_movement.PlayerMovementMixin",
+    "unstream.recipe_manager.StreamPlayerManagerMixin",
+    "unstream.recipe_manager.StreamRecipeManagerMixin",
     "unstream.tacs.ThreadedAnvilUnstreamMixin",
     "world.biome_access.BiomeAccessMixin",
     "world.blending.BlendMixin",
@@ -107,7 +113,9 @@
   "client": [
     "fastmath.rounding.FastRoundingDebugRenderMixin",
     "fastmath.rounding.FastRoundingQuadsMixin",
-    "threading.client_tick.ClientTickMixin"
+    "threading.client_tick.ClientTickMixin",
+    "unstream.recipe_manager.ClientNetworkAccessor",
+    "unstream.recipe_manager.StreamClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
