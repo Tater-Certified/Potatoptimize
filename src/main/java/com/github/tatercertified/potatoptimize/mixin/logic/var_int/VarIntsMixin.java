@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.var_int;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.encoding.VarInts;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,6 +8,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
 // Credit to PaperMC patch #1042
+@IfModAbsent(value = "krypton")
 @Mixin(VarInts.class)
 public class VarIntsMixin {
     /**

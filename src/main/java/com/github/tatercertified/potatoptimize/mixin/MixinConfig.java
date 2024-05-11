@@ -1,9 +1,10 @@
 package com.github.tatercertified.potatoptimize.mixin;
 
 import com.github.tatercertified.potatoptimize.Potatoptimize;
-import com.github.tatercertified.potatoptimize.config.ModCompatibility;
 import com.github.tatercertified.potatoptimize.config.Option;
 import com.github.tatercertified.potatoptimize.config.PotatoptimizeConfig;
+import com.moulberry.mixinconstraints.MixinConstraints;
+import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
@@ -16,14 +17,12 @@ import java.util.Set;
 
 public class MixinConfig implements IMixinConfigPlugin {
     private static final String MIXIN_PACKAGE_ROOT = "com.github.tatercertified.potatoptimize.mixin.";
-
     private final Logger logger = LogManager.getLogger("PotatoptimizeConfig");
-
     private PotatoptimizeConfig config;
 
     @Override
     public void onLoad(String mixinPackage) {
-        ModCompatibility.prepareMixins();
+        MixinConstraintsBootstrap.init(mixinPackage);
 
         try {
             this.config = PotatoptimizeConfig.load(new File("./config/potatoptimize.properties"));
@@ -79,7 +78,7 @@ public class MixinConfig implements IMixinConfigPlugin {
         }
 
         // Mod compatibility override
-        if (ModCompatibility.testFor(option.getName())) {
+        if (!MixinConstraints.shouldApplyMixin(targetClassName, mixinClassName)) {
             return false;
         }
 

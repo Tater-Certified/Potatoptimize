@@ -2,6 +2,7 @@ package com.github.tatercertified.potatoptimize.mixin.world.saving;
 
 import com.github.tatercertified.potatoptimize.mixin.logic.main_thread.ExceptionHandlerInvoker;
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkSaveInterface;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtIo;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 // Credit to Paper PR #9408
+@IfModAbsent(value = "c2me")
 @Mixin(PersistentState.class)
 public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
 

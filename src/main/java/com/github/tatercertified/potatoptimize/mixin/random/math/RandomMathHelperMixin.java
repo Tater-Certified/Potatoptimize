@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.random.math;
 
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.*;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
+@IfModAbsent(value = "faster-random")
 @Mixin(MathHelper.class)
 public class RandomMathHelperMixin {
 

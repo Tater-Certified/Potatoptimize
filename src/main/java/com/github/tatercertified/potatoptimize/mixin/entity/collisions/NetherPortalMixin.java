@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.collisions;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.server.world.ServerWorld;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@IfModAbsent(value = "chronos-carpet-addons")
 @Mixin(NetherPortal.class)
 public class NetherPortalMixin {
     @Inject(method = "findOpenPosition", at = @At("HEAD"), cancellable = true)

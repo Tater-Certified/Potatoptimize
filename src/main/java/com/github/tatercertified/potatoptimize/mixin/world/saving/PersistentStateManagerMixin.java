@@ -2,6 +2,7 @@ package com.github.tatercertified.potatoptimize.mixin.world.saving;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkManagerInterface;
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkSaveInterface;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.*;
 import java.io.File;
 import java.util.Map;
 
+@IfModAbsent(value = "c2me")
 @Mixin(PersistentStateManager.class)
 public abstract class PersistentStateManagerMixin implements AsyncChunkManagerInterface {
     @Shadow @Final private Map<String, PersistentState> loadedStates;

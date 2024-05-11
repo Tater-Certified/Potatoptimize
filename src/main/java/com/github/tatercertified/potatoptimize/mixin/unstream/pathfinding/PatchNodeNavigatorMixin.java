@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.unstream.pathfinding;
 
 import com.google.common.collect.Lists;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.entity.ai.pathing.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +19,7 @@ import java.util.Set;
 /**
  * Credit PaperMC patch #0485
  */
+@IfModAbsent(value = "servercore")
 @Mixin(PathNodeNavigator.class)
 public abstract class PatchNodeNavigatorMixin {
     @Shadow

@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.item.map_chunk_loading;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.ChunkQuery;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.World;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@IfModAbsent(value = "servercore")
 @Mixin(FilledMapItem.class)
 public class MapChunkLoadingMixin {
 

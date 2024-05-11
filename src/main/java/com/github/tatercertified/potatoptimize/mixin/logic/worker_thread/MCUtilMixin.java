@@ -3,6 +3,7 @@ package com.github.tatercertified.potatoptimize.mixin.logic.worker_thread;
 import com.github.tatercertified.potatoptimize.utils.ServerWorkerThreadWrapper;
 import com.github.tatercertified.potatoptimize.utils.threading.ThreadUtils;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 // Credit to TitaniumTown and Jettpack
+@IfModAbsent(value = "modernfix")
 @Mixin(Util.class)
 public abstract class MCUtilMixin {
     @Shadow

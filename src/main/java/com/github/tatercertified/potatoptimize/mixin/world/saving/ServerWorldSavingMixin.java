@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.world.saving;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkManagerInterface;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerChunkManager;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@IfModAbsent(value = "c2me")
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldSavingMixin {
 

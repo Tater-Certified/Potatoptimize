@@ -1,10 +1,12 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.math.random.GaussianGenerator;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.*;
 
+@IfModAbsent(value = "faster-random")
 @Mixin(GaussianGenerator.class)
 public class GaussianGeneratorMixin {
     @Final @Shadow @Mutable

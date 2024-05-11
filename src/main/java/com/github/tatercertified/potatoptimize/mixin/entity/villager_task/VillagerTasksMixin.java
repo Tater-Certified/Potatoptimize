@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.villager_task;
 
 import com.github.tatercertified.potatoptimize.utils.ai.WorkloadDistributor;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -27,6 +28,7 @@ import java.util.Set;
 /**
  * From Leaf patch #0044
  */
+@IfModAbsent(value = "lithium")
 @Mixin(Brain.class)
 public abstract class VillagerTasksMixin<E extends LivingEntity> {
     @Shadow @Final private Map<MemoryModuleType<?>, Optional<? extends Memory<?>>> memories;
