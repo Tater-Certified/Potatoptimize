@@ -1,7 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.unstream.recipe_manager;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.StreamlessRecipeManagerInterface;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;
@@ -23,9 +22,9 @@ import java.util.*;
 public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManagerInterface {
 
 
-    @Shadow protected abstract <C extends Inventory, T extends Recipe<C>> Map<Identifier, RecipeEntry<T>> getAllOfType(RecipeType<T> type);
+    @Shadow private Map<Identifier, RecipeEntry<?>> recipesById;
 
-    @Shadow private Map<RecipeType<?>, Map<Identifier, RecipeEntry<?>>> recipes;
+    @Shadow protected abstract <C extends Inventory, T extends Recipe<C>> Collection<RecipeEntry<T>> getAllOfType(RecipeType<T> type);
 
     /**
      * @author QPCrummer
@@ -33,7 +32,7 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
      */
     @Overwrite
     public <C extends Inventory, T extends Recipe<C>> Optional<RecipeEntry<T>> getFirstMatch(RecipeType<T> type, C inventory, World world) {
-        for(RecipeEntry<T> recipe : this.getAllOfType(type).values()) {
+        for(RecipeEntry<T> recipe : this.getAllOfType(type)) {
             if (recipe.value().matches(inventory, world)) {
                 return Optional.of(recipe);
             }
@@ -41,16 +40,13 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
         return Optional.empty();
     }
 
-    @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", shift = At.Shift.BEFORE), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void injectToRemoveStream(RecipeType<T> type, C inventory, World world, Identifier id, CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir, @Local(ordinal = 0) Map<Identifier, RecipeEntry<T>> map) {
-        for (Map.Entry<Identifier, RecipeEntry<T>> entry : map.entrySet()) {
-            if (entry.getValue().value().matches(inventory, world)) {
-                Identifier key = entry.getKey();
-                RecipeEntry<T> value = entry.getValue();
-                cir.setReturnValue(Optional.of(Pair.of(key, value)));
+    @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeManager;getAllOfType(Lnet/minecraft/recipe/RecipeType;)Ljava/util/Collection;", shift = At.Shift.BEFORE), cancellable = true)
+    private <C extends Inventory, T extends Recipe<C>> void injectToRemoveStream(RecipeType<T> type, C inventory, World world, Identifier id, CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
+        for (RecipeEntry<T> entry : this.getAllOfType(type)) {
+            if (entry.value().matches(inventory, world)) {
+                cir.setReturnValue(Optional.of(Pair.of(entry.id(), entry)));
             }
         }
-
         cir.setReturnValue(Optional.empty());
     }
 
@@ -61,7 +57,7 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
     @Overwrite
     public <C extends Inventory, T extends Recipe<C>> List<RecipeEntry<T>> getAllMatches(RecipeType<T> type, C inventory, World world) {
         List<RecipeEntry<T>> matches = new ArrayList<>();
-        for(RecipeEntry<T> recipe : this.getAllOfType(type).values()) {
+        for(RecipeEntry<T> recipe : this.getAllOfType(type)) {
             if (recipe.value().matches(inventory, world)) {
                 matches.add(recipe);
             }
@@ -72,19 +68,11 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
 
     @Override
     public List<RecipeEntry<?>> values() {
-        List<RecipeEntry<?>> allRecipes = new ArrayList<>();
-        for (Map<Identifier, RecipeEntry<?>> innerMap : this.recipes.values()) {
-            allRecipes.addAll(innerMap.values());
-        }
-        return allRecipes;
+        return new ArrayList<>(this.recipesById.values());
     }
 
     @Override
     public List<Identifier> keys() {
-        List<Identifier> allRecipes = new ArrayList<>();
-        for (Map<Identifier, RecipeEntry<?>> innerMap : this.recipes.values()) {
-            allRecipes.addAll(innerMap.keySet());
-        }
-        return allRecipes;
+        return new ArrayList<>(this.recipesById.keySet());
     }
 }

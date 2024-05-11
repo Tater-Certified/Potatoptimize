@@ -5,6 +5,7 @@ import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkSaveIn
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Util;
 import net.minecraft.world.PersistentState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,7 @@ import java.io.IOException;
 @Mixin(PersistentState.class)
 public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
 
-    @Shadow public abstract NbtCompound writeNbt(NbtCompound nbt);
+    @Shadow public abstract NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup);
 
     @Shadow public abstract boolean isDirty();
 
@@ -29,15 +30,15 @@ public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
      * @reason Make async
      */
     @Overwrite
-    public void save(File file) {
-        save(file, false);
+    public void save(File file, RegistryWrapper.WrapperLookup registryLookup) {
+        save(file, false, registryLookup);
     }
 
     @Override
-    public void save(File file, boolean async) {
+    public void save(File file, boolean async, RegistryWrapper.WrapperLookup registryLookup) {
         if (this.isDirty()) {
             NbtCompound compoundTag = new NbtCompound();
-            compoundTag.put("data", this.writeNbt(new NbtCompound()));
+            compoundTag.put("data", this.writeNbt(new NbtCompound(), registryLookup));
             NbtHelper.putDataVersion(compoundTag);
 
             Runnable writeRunnable = () -> {

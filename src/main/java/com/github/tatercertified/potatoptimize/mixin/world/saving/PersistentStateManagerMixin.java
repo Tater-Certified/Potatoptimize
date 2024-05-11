@@ -2,6 +2,7 @@ package com.github.tatercertified.potatoptimize.mixin.world.saving;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkManagerInterface;
 import com.github.tatercertified.potatoptimize.utils.interfaces.AsyncChunkSaveInterface;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import org.spongepowered.asm.mixin.*;
@@ -15,12 +16,14 @@ public abstract class PersistentStateManagerMixin implements AsyncChunkManagerIn
 
     @Shadow protected abstract File getFile(String id);
 
+    @Shadow @Final private RegistryWrapper.WrapperLookup registryLookup;
+
     @Unique
     @Override
     public void save(boolean async) {
         this.loadedStates.forEach((id, state) -> {
             if (state != null) {
-                ((AsyncChunkSaveInterface)state).save(this.getFile(id), async);
+                ((AsyncChunkSaveInterface)state).save(this.getFile(id), async, this.registryLookup);
             }
 
         });

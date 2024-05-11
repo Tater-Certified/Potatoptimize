@@ -1,5 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.remove.profiler;
 
+import net.minecraft.network.NetworkPhase;
+import net.minecraft.network.packet.PacketType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.profiling.jfr.Finishable;
@@ -86,7 +88,7 @@ public class JFRMixin {
      * @reason Removal
      */
     @Overwrite
-    public void onPacketReceived(int protocolId, int packetId, SocketAddress remoteAddress, int bytes) {
+    public void onPacketReceived(NetworkPhase state, PacketType<?> type, SocketAddress remoteAddress, int bytes) {
     }
 
     /**
@@ -94,7 +96,7 @@ public class JFRMixin {
      * @reason Removal
      */
     @Overwrite
-    public void onPacketSent(int protocolId, int packetId, SocketAddress remoteAddress, int bytes) {
+    public void onPacketSent(NetworkPhase state, PacketType<?> type, SocketAddress remoteAddress, int bytes) {
     }
 
     /**

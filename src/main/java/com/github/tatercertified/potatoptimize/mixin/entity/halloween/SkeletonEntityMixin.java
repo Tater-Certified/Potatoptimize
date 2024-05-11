@@ -26,7 +26,7 @@ public abstract class SkeletonEntityMixin extends HostileEntity {
     }
 
     @Inject(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/AbstractSkeletonEntity;setCanPickUpLoot(Z)V", shift = At.Shift.AFTER), cancellable = true)
-    private void optimizedCheckHalloween(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+    private void optimizedCheckHalloween(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         if (((IsHalloweenInterface)this.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
             this.equipStack(EquipmentSlot.HEAD, new ItemStack(random.nextFloat() < 0.1f ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN));
             this.armorDropChances[EquipmentSlot.HEAD.getEntitySlotId()] = 0.0f;
