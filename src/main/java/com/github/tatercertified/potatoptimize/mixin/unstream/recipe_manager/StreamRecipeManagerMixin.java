@@ -41,13 +41,8 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
     }
 
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeManager;getAllOfType(Lnet/minecraft/recipe/RecipeType;)Ljava/util/Collection;", shift = At.Shift.BEFORE), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void injectToRemoveStream(RecipeType<T> type, C inventory, World world, Identifier id, CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
-        for (RecipeEntry<T> entry : this.getAllOfType(type)) {
-            if (entry.value().matches(inventory, world)) {
-                cir.setReturnValue(Optional.of(Pair.of(entry.id(), entry)));
-            }
-        }
-        cir.setReturnValue(Optional.empty());
+    private <C extends Inventory, T extends Recipe<C>> void injectToRemoveStream(RecipeType<T> type, C inventory, World world, Identifier id, CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
+        cir.setReturnValue(getFirstMatch(type, inventory, world));
     }
 
     /**
