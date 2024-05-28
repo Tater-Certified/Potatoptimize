@@ -14,7 +14,7 @@ public class JFRCommandMixin {
      */
     @Overwrite
     private static int executeStart(ServerCommandSource source) {
-        source.sendFeedback(() -> Text.literal("JFR has been removed by Potatoptimize; Use Spark instead!"), false);
+        source.sendFeedback(Text.literal("JFR has been removed by Potatoptimize; Use Spark instead!"), false);
         return 0;
     }
 
@@ -24,7 +24,7 @@ public class JFRCommandMixin {
      */
     @Overwrite
     private static int executeStop(ServerCommandSource source) {
-        source.sendFeedback(() -> Text.literal("JFR has been removed by Potatoptimize; Use Spark instead!"), false);
+        source.sendFeedback(Text.literal("JFR has been removed by Potatoptimize; Use Spark instead!"), false);
         return 0;
     }
 }
