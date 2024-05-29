@@ -3,9 +3,7 @@ package com.github.tatercertified.potatoptimize.mixin.logic.reduce_ray_casting;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.HeightLimitView;
@@ -51,7 +49,15 @@ public interface BlockViewCastingMixin extends HeightLimitView {
             return d <= e ? blockHitResult : blockHitResult2;
         }, (innerContext) -> {
             Vec3d vec3d = innerContext.getStart().subtract(innerContext.getEnd());
-            return BlockHitResult.createMissed(innerContext.getEnd(), Direction.getFacing(vec3d.x, vec3d.y, vec3d.z), BlockPos.ofFloored(innerContext.getEnd()));
+            return BlockHitResult.createMissed(innerContext.getEnd(), Direction.getFacing(vec3d.x, vec3d.y, vec3d.z), ofFloored(innerContext.getEnd()));
         });
+    }
+
+    private BlockPos ofFloored(double x, double y, double z) {
+        return new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+    }
+
+    private BlockPos ofFloored(Position pos) {
+        return ofFloored(pos.getX(), pos.getY(), pos.getZ());
     }
 }

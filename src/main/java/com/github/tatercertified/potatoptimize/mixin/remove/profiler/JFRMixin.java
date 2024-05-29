@@ -1,11 +1,12 @@
 package com.github.tatercertified.potatoptimize.mixin.remove.profiler;
 
-import net.minecraft.registry.RegistryKey;
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.profiling.jfr.Finishable;
 import net.minecraft.util.profiling.jfr.InstanceType;
 import net.minecraft.util.profiling.jfr.JfrProfiler;
 import net.minecraft.util.profiling.jfr.event.NetworkSummaryEvent;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import java.io.Reader;
 import java.net.SocketAddress;
 import java.nio.file.Path;
 
+@IfMinecraftVersion(maxVersion = "1.19.2")
 @Mixin(JfrProfiler.class)
 public class JFRMixin {
 

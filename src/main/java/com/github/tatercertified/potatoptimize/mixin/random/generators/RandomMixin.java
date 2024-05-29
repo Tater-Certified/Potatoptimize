@@ -1,12 +1,14 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.math.random.RandomSeed;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+@IfModAbsent("faster-random")
 @Mixin(Random.class)
 public interface RandomMixin {
     /**

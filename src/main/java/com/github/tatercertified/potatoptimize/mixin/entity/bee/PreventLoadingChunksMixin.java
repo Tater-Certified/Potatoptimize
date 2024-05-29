@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.bee;
 
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.BeeEntity;
@@ -41,6 +42,7 @@ public abstract class PreventLoadingChunksMixin extends Entity {
         }
     }
 
+    @IfMinecraftVersion(minVersion = "1.19.3")
     @Redirect(method = "isHiveValid", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/BeeEntity;isTooFar(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean cancelIfNotLoaded(BeeEntity instance, BlockPos pos) {
         return this.isChunkNotNear(this.getBlockPos(), pos) || !this.getWorld().isChunkLoaded(pos);

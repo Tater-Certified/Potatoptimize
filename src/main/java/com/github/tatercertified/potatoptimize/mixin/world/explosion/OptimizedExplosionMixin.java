@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.world.explosion;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * Credit to PaperMC patch #0334 and patch #0039
  */
+@IfModAbsent("lithium")
 @Mixin(Explosion.class)
 public class OptimizedExplosionMixin {
     @Shadow @Final private World world;

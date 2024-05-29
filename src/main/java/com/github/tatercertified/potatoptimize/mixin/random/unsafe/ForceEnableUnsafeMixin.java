@@ -3,6 +3,7 @@ package com.github.tatercertified.potatoptimize.mixin.random.unsafe;
 import com.github.tatercertified.potatoptimize.Potatoptimize;
 import com.github.tatercertified.potatoptimize.utils.UnsafeGrabber;
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.math.random.RandomSplitter;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +13,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
+@IfModAbsent("faster-random")
 @Mixin(ThreadLocalRandomImpl.class)
 public class ForceEnableUnsafeMixin {
 
