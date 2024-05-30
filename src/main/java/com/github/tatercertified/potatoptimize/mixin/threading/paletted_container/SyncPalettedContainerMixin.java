@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.threading.paletted_container;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.collection.IndexedIterable;
 import net.minecraft.util.collection.PackedIntegerArray;
@@ -18,6 +19,7 @@ import java.util.stream.LongStream;
 /*
 Credit to PaperMC for this idea
  */
+@IfModAbsent(value = "modernfix")
 @Mixin(PalettedContainer.class)
 public abstract class SyncPalettedContainerMixin<T> implements PaletteResizeListener<T>,
         ReadableContainer<T>  {

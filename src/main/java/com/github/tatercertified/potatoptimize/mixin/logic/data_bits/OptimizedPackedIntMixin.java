@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.data_bits;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.collection.PackedIntegerArray;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Credit to PaperMC patch #0087
  */
+@IfModAbsent(value = "modernfix", aliases = {"lithium"})
 @Mixin(PackedIntegerArray.class)
 public class OptimizedPackedIntMixin {
     @Shadow @Final private int indexScale;
