@@ -132,6 +132,11 @@ public class SplittableRandomImpl implements PotatoptimizedRandom {
         }
 
         @Override
+        public Random split(long seed) {
+            return new SplittableRandomImpl(seed ^ this.seed);
+        }
+
+        @Override
         public Random split(int x, int y, int z) {
             long l = MathHelper.hashCode(x, y, z);
             long m = l ^ this.seed;

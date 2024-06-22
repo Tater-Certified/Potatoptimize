@@ -1,12 +1,11 @@
 package com.github.tatercertified.potatoptimize.mixin.unstream.recipe_manager;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.StreamlessRecipeManagerInterface;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,25 +23,25 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
 
     @Shadow private Map<Identifier, RecipeEntry<?>> recipesById;
 
-    @Shadow protected abstract <C extends Inventory, T extends Recipe<C>> Collection<RecipeEntry<T>> getAllOfType(RecipeType<T> type);
+    @Shadow protected abstract <I extends RecipeInput, T extends Recipe<I>> Collection<RecipeEntry<T>> getAllOfType(RecipeType<T> type);
 
     /**
      * @author QPCrummer
      * @reason Remove Stream API
      */
     @Overwrite
-    public <C extends Inventory, T extends Recipe<C>> Optional<RecipeEntry<T>> getFirstMatch(RecipeType<T> type, C inventory, World world) {
+    public <I extends RecipeInput, T extends Recipe<I>> Optional<RecipeEntry<T>> getFirstMatch(RecipeType<T> type, I input, World world) {
         for(RecipeEntry<T> recipe : this.getAllOfType(type)) {
-            if (recipe.value().matches(inventory, world)) {
+            if (recipe.value().matches(input, world)) {
                 return Optional.of(recipe);
             }
         }
         return Optional.empty();
     }
 
-    @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeManager;getAllOfType(Lnet/minecraft/recipe/RecipeType;)Ljava/util/Collection;", shift = At.Shift.BEFORE), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void injectToRemoveStream(RecipeType<T> type, C inventory, World world, Identifier id, CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
-        cir.setReturnValue(getFirstMatch(type, inventory, world));
+    @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;Lnet/minecraft/recipe/RecipeEntry;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeManager;getAllOfType(Lnet/minecraft/recipe/RecipeType;)Ljava/util/Collection;", shift = At.Shift.BEFORE), cancellable = true)
+    private <I extends RecipeInput, T extends Recipe<I>> void injectToRemoveStream(RecipeType<T> type, I input, World world, RecipeEntry<T> recipe, CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
+        cir.setReturnValue(getFirstMatch(type, input, world));
     }
 
     /**
@@ -50,10 +49,10 @@ public abstract class StreamRecipeManagerMixin implements StreamlessRecipeManage
      * @reason Remove StreamAPI
      */
     @Overwrite
-    public <C extends Inventory, T extends Recipe<C>> List<RecipeEntry<T>> getAllMatches(RecipeType<T> type, C inventory, World world) {
+    public <I extends RecipeInput, T extends Recipe<I>> List<RecipeEntry<T>> getAllMatches(RecipeType<T> type, I input, World world) {
         List<RecipeEntry<T>> matches = new ArrayList<>();
         for(RecipeEntry<T> recipe : this.getAllOfType(type)) {
-            if (recipe.value().matches(inventory, world)) {
+            if (recipe.value().matches(input, world)) {
                 matches.add(recipe);
             }
         }

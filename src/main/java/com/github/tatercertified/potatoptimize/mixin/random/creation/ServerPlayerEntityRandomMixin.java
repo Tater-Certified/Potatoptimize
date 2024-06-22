@@ -13,7 +13,7 @@ public abstract class ServerPlayerEntityRandomMixin {
 
     @Shadow public abstract ServerWorld getServerWorld();
 
-    @Redirect(method = "moveToSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;create()Lnet/minecraft/util/math/random/Random;"))
+    @Redirect(method = "getWorldSpawnPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;create()Lnet/minecraft/util/math/random/Random;"))
     private Random redirectCreatedRandom() {
         return getServerWorld().random;
     }

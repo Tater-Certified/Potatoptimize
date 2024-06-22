@@ -9,9 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(BakedQuadFactory.class)
 public class FastRoundingQuadsMixin {
     @Redirect(
-            method = "uvLock(Lnet/minecraft/client/render/model/json/ModelElementTexture;Lnet/minecraft/util/math/"+
-                    "Direction;Lnet/minecraft/util/math/AffineTransformation;Lnet/minecraft/util/Identifier;)"+
-                    "Lnet/minecraft/client/render/model/json/ModelElementTexture;",
+            method = "uvLock",
             require = 0,
             at = @At(value = "INVOKE", target = "Ljava/lang/Math;round(D)J"))
     private static long fasterRound(double value) {

@@ -28,7 +28,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": ">=1.20.5"
+    "minecraft": ">=1.21"
   },
   "custom": {
     "lithium:options": {

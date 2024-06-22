@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -29,9 +29,9 @@ dependencies {
 
     //modCompileOnly("com.github.CaffeineMC:lithium-fabric:mc1.20.4-0.12.1")
 
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.5")))
-    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.5")))
-    include(implementation("com.moulberry:mixinconstraints:1.0.0"))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.6")))
+    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0-beta.3")))
+    include(implementation("com.moulberry:mixinconstraints:1.0.1"))
 }
 
 processResources {

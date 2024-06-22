@@ -1,12 +1,12 @@
 package com.github.tatercertified.potatoptimize.mixin.unstream.tacs;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.server.world.ServerChunkLoadingManager;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;
 
-@Mixin(ThreadedAnvilChunkStorage.EntityTracker.class)
+@Mixin(ServerChunkLoadingManager.EntityTracker.class)
 public abstract class ThreadedAnvilUnstreamMixin {
     @Shadow protected abstract int adjustTrackingDistance(int initialDistance);
 

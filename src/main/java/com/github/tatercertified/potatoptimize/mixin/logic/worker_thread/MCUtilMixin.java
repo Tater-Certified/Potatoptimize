@@ -31,7 +31,7 @@ public abstract class MCUtilMixin {
      * @reason Optimize worker threads
      */
     @Overwrite
-    public static ExecutorService createWorker(String name) {
+    private static ExecutorService createWorker(String name) {
         int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, getMaxBackgroundThreads());
         ExecutorService executorService;
         if (i <= 0) {
