@@ -1,4 +1,4 @@
-package com.github.tatercertified.potatoptimize.mixin.memory.reduce_random;
+package com.github.tatercertified.potatoptimize.mixin.unstable.reduce_random;
 
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
 import net.minecraft.util.math.random.Random;

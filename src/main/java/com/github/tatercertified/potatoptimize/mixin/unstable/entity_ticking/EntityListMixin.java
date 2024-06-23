@@ -1,4 +1,4 @@
-package com.github.tatercertified.potatoptimize.mixin.threading.entity_ticking;
+package com.github.tatercertified.potatoptimize.mixin.unstable.entity_ticking;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.ServerEntityThreadInterface;
 import net.minecraft.entity.Entity;

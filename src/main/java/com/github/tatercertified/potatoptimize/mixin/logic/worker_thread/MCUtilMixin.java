@@ -38,7 +38,7 @@ public abstract class MCUtilMixin {
             executorService = MoreExecutors.newDirectExecutorService();
         } else {
             executorService = new AbstractExecutorService() {
-                private volatile boolean shutdown = false;
+                private volatile boolean shutdown;
 
                 @Override
                 public List<Runnable> shutdownNow() {

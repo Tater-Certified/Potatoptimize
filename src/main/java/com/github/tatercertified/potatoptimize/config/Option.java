@@ -13,7 +13,7 @@ public class Option {
     private final String name;
 
     private Object2BooleanLinkedOpenHashMap<Option> dependencies;
-    private Set<String> modDefined = null;
+    private Set<String> modDefined;
     private boolean enabled;
     private boolean userDefined;
 

@@ -26,9 +26,9 @@ public abstract class MobPathfindingMixin {
 
     @Shadow @Final protected MobEntity entity;
     @Unique
-    private int lastFailure = 0;
+    private int lastFailure;
     @Unique
-    private int pathfindFailures = 0;
+    private int pathfindFailures;
 
     @Inject(method = "startMovingTo(Lnet/minecraft/entity/Entity;D)Z", at = @At("HEAD"), cancellable = true)
     private void startMovingTo(Entity entity, double speed, CallbackInfoReturnable<Boolean> cir) {

@@ -1,5 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.reduce_ray_casting;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.fabricmc.fabric.api.blockview.v2.FabricBlockView;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
@@ -22,7 +23,7 @@ import java.util.function.Function;
 /**
  * Credit to PaperMC Patch #0687 and #684
  */
-
+@IfModAbsent(value = "lithium")
 @Mixin(BlockView.class)
 public interface BlockViewCastingMixin extends HeightLimitView, FabricBlockView {
     @Shadow BlockState getBlockState(BlockPos pos);

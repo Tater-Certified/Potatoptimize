@@ -24,17 +24,20 @@ public class PotatoptimizeConfig {
 
     private PotatoptimizeConfig() {
         // Defines the default rules which can be configured by the user or other mods.
-        InputStream defaultPropertiesStream = PotatoptimizeConfig.class.getResourceAsStream("/assets/potatoptimize/potatoptimize-mixin-config-default.properties");
-        if (defaultPropertiesStream == null) {
-            throw new IllegalStateException("Potatoptimize mixin config default properties could not be read!");
-        }
-        try (BufferedReader propertiesReader = new BufferedReader(new InputStreamReader(defaultPropertiesStream))) {
-            Properties properties = new Properties();
-            properties.load(propertiesReader);
-            properties.forEach((ruleName, enabled) -> this.addMixinRule((String) ruleName, Boolean.parseBoolean((String) enabled)));
+        try (InputStream defaultPropertiesStream = PotatoptimizeConfig.class.getResourceAsStream("/assets/potatoptimize/potatoptimize-mixin-config-default.properties")) {
+            if (defaultPropertiesStream == null) {
+                throw new IllegalStateException("Potatoptimize mixin config default properties could not be read!");
+            }
+            try (BufferedReader propertiesReader = new BufferedReader(new InputStreamReader(defaultPropertiesStream))) {
+                Properties properties = new Properties();
+                properties.load(propertiesReader);
+                properties.forEach((ruleName, enabled) -> this.addMixinRule((String) ruleName, Boolean.parseBoolean((String) enabled)));
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IllegalStateException("Potatoptimize mixin config default properties could not be read!");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("Potatoptimize mixin config default properties could not be read!");
+            throw new RuntimeException(e);
         }
     }
 
