@@ -38,7 +38,7 @@ public abstract class VoxelShapesMixin {
     }
 
     @Inject(method = "createListPair", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/doubles/DoubleList;getDouble(I)D", ordinal = 0, shift = At.Shift.BEFORE), cancellable = true)
-    private static void injectCreatePairList(int size, DoubleList first, DoubleList second, boolean includeFirst, boolean includeSecond, CallbackInfoReturnable<PairList> cir, @Local(ordinal = 0) int i, @Local(ordinal = 0) int j) {
+    private static void injectCreatePairList(int size, DoubleList first, DoubleList second, boolean includeFirst, boolean includeSecond, CallbackInfoReturnable<PairList> cir, @Local(ordinal = 0, argsOnly = true) int i, @Local(ordinal = 0, argsOnly = true) int j) {
         if (i == j && Objects.equals(first, second)) {
             if (first instanceof IdentityPairList) {
                 cir.setReturnValue((PairList) first);
