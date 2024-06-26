@@ -14,7 +14,7 @@ import java.util.Map;
 public class AdvancementsMixin {
 
     @Redirect(method = "<init>(Ljava/util/Optional;Ljava/util/Optional;Lnet/minecraft/advancement/AdvancementRewards;Ljava/util/Map;Lnet/minecraft/advancement/AdvancementRequirements;Z)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;copyOf(Ljava/util/Map;)Ljava/util/Map;"))
-    private static Map<String, AdvancementCriterion<?>> removeCopyOfMap(Map<String, AdvancementCriterion<?>> map, @Local(ordinal = 0) Map<String, AdvancementCriterion<?>> criteria) {
+    private static Map<String, AdvancementCriterion<?>> removeCopyOfMap(Map<String, AdvancementCriterion<?>> map, @Local(ordinal = 0, argsOnly = true) Map<String, AdvancementCriterion<?>> criteria) {
         return criteria;
     }
 }

@@ -1,15 +1,12 @@
 package com.github.tatercertified.potatoptimize.mixin.feature.interaction_limiter;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.InteractionLimiterInterface;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.SERVER)
 @Mixin(ServerPlayerEntity.class)
 public class LimiterServerPlayerEntityMixin implements InteractionLimiterInterface {
     private int instaBreakCountPerTick = 0;

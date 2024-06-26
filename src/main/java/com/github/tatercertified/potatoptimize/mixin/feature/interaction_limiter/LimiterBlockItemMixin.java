@@ -1,8 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.feature.interaction_limiter;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.InteractionLimiterInterface;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -15,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Environment(EnvType.SERVER)
 @Mixin(BlockItem.class)
 public abstract class LimiterBlockItemMixin {
     @Shadow protected abstract @Nullable BlockState getPlacementState(ItemPlacementContext context);

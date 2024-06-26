@@ -30,17 +30,17 @@ public class EulerAngleMixin {
     private static float roll;
 
     @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;pitch:F"))
-    private void injectedPitch(EulerAngle instance, float value, @Local(ordinal = 0) float pitch) {
+    private void injectedPitch(EulerAngle instance, float value, @Local(ordinal = 0, argsOnly = true) float pitch) {
         EulerAngleMixin.pitch = pitch;
     }
 
     @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;yaw:F"))
-    private void injectedYaw(EulerAngle instance, float value, @Local(ordinal = 0) float yaw) {
+    private void injectedYaw(EulerAngle instance, float value, @Local(ordinal = 0, argsOnly = true) float yaw) {
         EulerAngleMixin.yaw = yaw;
     }
 
     @Redirect(method = "<init>(FFF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/EulerAngle;roll:F"))
-    private void injectedRoll(EulerAngle instance, float value, @Local(ordinal = 0) float roll) {
+    private void injectedRoll(EulerAngle instance, float value, @Local(ordinal = 0, argsOnly = true) float roll) {
         EulerAngleMixin.roll = roll;
     }
 

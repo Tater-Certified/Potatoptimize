@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(PlayerManager.class)
 public class SmoothTeleportPlayerManagerMixin {
     @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0))
-    private void removeSendPacket(ServerPlayNetworkHandler instance, Packet packet, @Local(ordinal = 0) ServerPlayerEntity serverPlayerEntity) {
+    private void removeSendPacket(ServerPlayNetworkHandler instance, Packet packet, @Local(ordinal = 0, argsOnly = true) ServerPlayerEntity serverPlayerEntity) {
         if (!((SmoothTeleportInterface)serverPlayerEntity).shouldSmoothTeleport()) {
             instance.sendPacket(packet);
         }
     }
 
     @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;requestTeleport(DDDFF)V"))
-    private void removeSpawnRequest(ServerPlayNetworkHandler instance, double x, double y, double z, float yaw, float pitch, @Local(ordinal = 0) ServerPlayerEntity serverPlayerEntity) {
+    private void removeSpawnRequest(ServerPlayNetworkHandler instance, double x, double y, double z, float yaw, float pitch, @Local(ordinal = 0, argsOnly = true) ServerPlayerEntity serverPlayerEntity) {
         if (!((SmoothTeleportInterface)serverPlayerEntity).shouldSmoothTeleport()) {
             instance.requestTeleport(x, y, z, yaw, pitch);
         }

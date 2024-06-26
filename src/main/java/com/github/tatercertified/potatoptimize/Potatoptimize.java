@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 
 public class Potatoptimize implements ModInitializer {
     public static PotatoptimizeConfig CONFIG;
-    public static MinecraftServer almightyServerInstance;
     public static final ExecutorService clientTickExecutor = Executors.newSingleThreadExecutor();
     public static boolean isUnsafeRandomEnabled;
     /**
@@ -21,7 +20,5 @@ public class Potatoptimize implements ModInitializer {
         if (CONFIG == null) {
             throw new IllegalStateException("The mixin plugin did not initialize the config! Did it not load?");
         }
-
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> almightyServerInstance = server);
     }
 }

@@ -25,17 +25,17 @@ public abstract class ServerWorldSavingMixin {
     @Shadow public abstract ServerChunkManager getChunkManager();
 
     @Unique
-    private void saveLevel(boolean async) {
+    private void saveLevel() {
         if (this.enderDragonFight != null) {
             this.server.getSaveProperties().setDragonFight(this.enderDragonFight.toData());
         }
 
-        ((AsyncChunkManagerInterface)this.getChunkManager().getPersistentStateManager()).save(async);
+        ((AsyncChunkManagerInterface)this.getChunkManager().getPersistentStateManager()).save(true);
     }
 
     @Redirect(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;saveLevel()V"))
     private void redirectToAsync(ServerWorld instance) {
         //TODO Figure out what "close" is in
-        this.saveLevel(true);
+        this.saveLevel();
     }
 }

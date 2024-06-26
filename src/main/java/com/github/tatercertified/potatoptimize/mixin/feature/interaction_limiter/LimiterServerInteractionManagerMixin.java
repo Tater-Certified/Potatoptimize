@@ -1,8 +1,6 @@
 package com.github.tatercertified.potatoptimize.mixin.feature.interaction_limiter;
 
 import com.github.tatercertified.potatoptimize.utils.interfaces.InteractionLimiterInterface;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -15,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.SERVER)
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class LimiterServerInteractionManagerMixin {
     @Shadow @Final protected ServerPlayerEntity player;
