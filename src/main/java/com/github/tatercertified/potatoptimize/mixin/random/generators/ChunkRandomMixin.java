@@ -1,8 +1,8 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
 import com.github.tatercertified.potatoptimize.Potatoptimize;
-import com.github.tatercertified.potatoptimize.utils.random.SplittableRandomImpl;
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.XorShiftRandomImpl;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.util.math.random.Random;
@@ -25,7 +25,7 @@ public class ChunkRandomMixin {
         if (!Potatoptimize.isUnsafeRandomEnabled) {
             this.baseRandom = new ThreadLocalRandomImpl();
         } else {
-            this.baseRandom = new SplittableRandomImpl();
+            this.baseRandom = new XorShiftRandomImpl();
         }
     }
 }

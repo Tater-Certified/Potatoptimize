@@ -2,9 +2,6 @@ package com.github.tatercertified.potatoptimize.mixin.fastmath.vec;
 
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Vec3d.class)
 public class FastMathVec3DMixin {
@@ -36,13 +33,5 @@ public class FastMathVec3DMixin {
             }
         }
         return cachedNormalized;
-    }
-
-    // TODO Figure out why I did this...
-    @Inject(method = "relativize", at = @At("HEAD"))
-    private void optimizedRelativize(Vec3d vec, CallbackInfoReturnable<Vec3d> cir) {
-        this.x -= vec.x;
-        this.y -= vec.y;
-        this.z -= vec.z;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.random.generators;
 
 import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.XorShiftRandomImpl;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.math.random.RandomSeed;
@@ -30,13 +31,11 @@ public interface RandomMixin {
 
     /**
      * @author QPCrummer
-     * @reason Use my implementation of ThreadLocalRandom
-     *
-     * This has been removed for now as it causes issues with chunk rebuilding!
-     *
+     * @reason Use my implementation of XorShift
+     */
     @Overwrite
     static Random create(long seed) {
-        return new ThreadLocalRandomImpl(seed);
+        return new XorShiftRandomImpl((int) seed);
     }
-     */
+
 }

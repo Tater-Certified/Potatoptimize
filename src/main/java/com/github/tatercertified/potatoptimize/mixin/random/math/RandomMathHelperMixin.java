@@ -7,7 +7,6 @@ import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
@@ -16,9 +15,7 @@ import java.util.UUID;
 @Mixin(MathHelper.class)
 public class RandomMathHelperMixin {
 
-    //TODO Determine the impact of having RANDOM Shadowed and not final
-    @Unique
-    private static Random RANDOM = new ThreadLocalRandomImpl();
+    @Shadow @Final private static Random RANDOM;
 
     @Inject(method = "nextGaussian", at = @At("HEAD"), cancellable = true)
     private static void optimizedGaussian(Random random, float mean, float deviation, CallbackInfoReturnable<Float> cir) {
@@ -53,10 +50,5 @@ public class RandomMathHelperMixin {
     @Inject(method = "nextDouble", at = @At("HEAD"), cancellable = true)
     private static void optimizedNextDouble(Random random, double min, double max, CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextDouble(min, max));
-    }
-
-    @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;createThreadSafe()Lnet/minecraft/util/math/random/Random;", shift = At.Shift.AFTER))
-    private static void reassignRandom(CallbackInfo ci) {
-        RANDOM = new ThreadLocalRandomImpl();
     }
 }
