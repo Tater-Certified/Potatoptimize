@@ -29,6 +29,7 @@ public interface RandomMixin {
         return new ThreadLocalRandomImpl(ThreadLocalRandom.current().nextLong());
     }
 
+
     /**
      * @author QPCrummer
      * @reason Use my implementation of XorShift
@@ -37,5 +38,4 @@ public interface RandomMixin {
     static Random create(long seed) {
         return new XorShiftRandomImpl((int) seed);
     }
-
 }

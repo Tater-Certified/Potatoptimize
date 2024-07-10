@@ -7,11 +7,9 @@ import net.minecraft.util.math.random.RandomSplitter;
 import java.util.UUID;
 
 /**
- * Credit: Gale Patch #0131
+ * Credit: Gale Patch #0139
  */
 public class XorShiftRandomImpl implements PotatoptimizedRandom {
-
-    public static final Random INSTANCE = new XorShiftRandomImpl();
 
     final double REAL_UNIT_INT = 1.0 / (0x7FFFFFFFL);
     final double REAL_UNIT_UINT = 1.0 / (0xFFFFFFFFL);
@@ -117,7 +115,8 @@ public class XorShiftRandomImpl implements PotatoptimizedRandom {
 
     @Override
     public long nextLong() {
-        return nextUInt() << 32 + nextUInt();
+        // This special commit goes to Codium AI for finding a bug that IDEA tells me is completely unnecessary
+        return ((long) nextUInt() << 32) + nextUInt();
     }
 
     @Override

@@ -1,54 +1,80 @@
 package com.github.tatercertified.potatoptimize.mixin.random.math;
 
-import com.github.tatercertified.potatoptimize.utils.random.ThreadLocalRandomImpl;
+import com.github.tatercertified.potatoptimize.utils.random.PotatoptimizedRandom;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
 @IfModAbsent(value = "faster-random")
 @Mixin(MathHelper.class)
-public class RandomMathHelperMixin {
+public abstract class RandomMathHelperMixin {
 
-    @Shadow @Final private static Random RANDOM;
-
-    @Inject(method = "nextGaussian", at = @At("HEAD"), cancellable = true)
-    private static void optimizedGaussian(Random random, float mean, float deviation, CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextGaussian(mean, deviation));
+    @Shadow
+    public static float nextBetween(Random random, float min, float max) {
+        return 0;
     }
 
-    @Inject(method = "nextBetween(Lnet/minecraft/util/math/random/Random;II)I", at = @At("HEAD"), cancellable = true)
-    private static void optimizedNextBetween(Random random, int min, int max, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(RANDOM.nextBetween(min, max));
+    @ModifyReturnValue(method = "nextGaussian", at = @At("RETURN"))
+    private static float optimizedGaussian(float original, @Local(ordinal = 0, argsOnly = true) float mean, @Local(ordinal = 0, argsOnly = true) float deviation, @Local(ordinal = 0, argsOnly = true) Random random) {
+        return (float) (mean + quickGaussian(random) * deviation);
     }
 
-    @Inject(method = "nextBetween(Lnet/minecraft/util/math/random/Random;FF)F", at = @At("HEAD"), cancellable = true)
-    private static void optimizedNextBetween(Random random, float min, float max, CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextFloat(min, max));
+    // Gaussian Code
+    private static double quickGaussian(Random random) {
+        long randomBits = random.nextLong();
+        long evenChunks = randomBits & EVEN_CHUNKS;
+        long oddChunks = (randomBits & ODD_CHUNKS) >>> 5;
+        long sum = chunkSum(evenChunks + oddChunks) - 186;
+        return sum / 31.0;
     }
 
-    @Inject(method = "randomUuid(Lnet/minecraft/util/math/random/Random;)Ljava/util/UUID;", at = @At("HEAD"), cancellable = true)
-    private static void optimizedRandomUUID(Random random, CallbackInfoReturnable<UUID> cir) {
-        cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextUUID());
+    private static long chunkSum(long bits) {
+        long sum = bits + (bits >>> 40);
+        sum += sum >>> 20;
+        sum += sum >>> 10;
+        sum &= (1<<10)-1;
+        return sum;
     }
 
-    @Inject(method = "nextInt", at = @At("HEAD"), cancellable = true)
-    private static void optimizedNextInt(Random random, int min, int max, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(RANDOM.nextBetween(min, max));
+    private static final long EVEN_CHUNKS = 0x7c1f07c1f07c1fL;
+    private static final long ODD_CHUNKS  = EVEN_CHUNKS << 5;
+
+    @ModifyReturnValue(method = "nextFloat", at = @At("RETURN"))
+    private static float optimizedNextBetween(float original, @Local(ordinal = 0, argsOnly = true) Random random, @Local(ordinal = 0, argsOnly = true) float min, @Local(ordinal = 0, argsOnly = true) float max) {
+        if (random instanceof PotatoptimizedRandom potatoptimizedRandom) {
+            return potatoptimizedRandom.nextFloat(min, max);
+        } else {
+            return original;
+        }
     }
 
-    @Inject(method = "nextFloat", at = @At("HEAD"), cancellable = true)
-    private static void optimizedNextFloat(Random random, float min, float max, CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextFloat(min, max));
+    @ModifyReturnValue(method = "randomUuid(Lnet/minecraft/util/math/random/Random;)Ljava/util/UUID;", at = @At("RETURN"))
+    private static UUID optimizedRandomUUID(UUID original, @Local(ordinal = 0, argsOnly = true) Random random) {
+        return new UUID(random.nextLong() & 0xFFFFFFFFFFFF0FFFL | 0x4000L, random.nextLong()  & 0x3FFFFFFFFFFFFFFFL | Long.MIN_VALUE);
     }
 
-    @Inject(method = "nextDouble", at = @At("HEAD"), cancellable = true)
-    private static void optimizedNextDouble(Random random, double min, double max, CallbackInfoReturnable<Double> cir) {
-        cir.setReturnValue(((ThreadLocalRandomImpl)RANDOM).nextDouble(min, max));
+    @ModifyReturnValue(method = "nextInt", at = @At("RETURN"))
+    private static int optimizedNextInt(int original, @Local(ordinal = 0, argsOnly = true) Random random, @Local(ordinal = 0, argsOnly = true) int min, @Local(ordinal = 0, argsOnly = true) int max) {
+        return random.nextBetween(min, max);
+    }
+
+    @ModifyReturnValue(method = "nextFloat", at = @At("RETURN"))
+    private static float optimizedNextFloat(float original, @Local(ordinal = 0, argsOnly = true) Random random, @Local(ordinal = 0, argsOnly = true) float min, @Local(ordinal = 0, argsOnly = true) float max) {
+        return nextBetween(random, min, max);
+    }
+
+    @ModifyReturnValue(method = "nextDouble", at = @At("RETURN"))
+    private static double optimizedNextDouble(double original, @Local(ordinal = 0, argsOnly = true) Random random, @Local(ordinal = 0, argsOnly = true) double min, @Local(ordinal = 0, argsOnly = true) double max) {
+        if (random instanceof PotatoptimizedRandom potatoptimizedRandom) {
+            return potatoptimizedRandom.nextDouble(min, max);
+        } else {
+            return  original;
+        }
     }
 }

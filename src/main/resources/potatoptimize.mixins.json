@@ -82,6 +82,8 @@
     "random.generators.RandomMixin",
     "random.math.GetRandomInterface",
     "random.math.RandomMathHelperMixin",
+    "random.slime.RandomSlimeEntityMixin",
+    "random.slime.SlimeChunkMixin",
     "random.unsafe.ForceEnableUnsafeMixin",
     "random.world.RandomServerChunkManagerMixin",
     "random.world.RandomServerWorldMixin",
