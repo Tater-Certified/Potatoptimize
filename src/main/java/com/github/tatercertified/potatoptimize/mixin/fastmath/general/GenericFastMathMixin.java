@@ -56,14 +56,14 @@ public class GenericFastMathMixin {
      */
     @Overwrite
     public static IntStream stream(int seed, int lowerBound, int upperBound, int steps) {
-
-        if (steps < 1 || seed < lowerBound || seed > upperBound) {
-            return IntStream.empty();
+        if (lowerBound > upperBound || steps < 1) {
+            throw new IllegalArgumentException("Invalid bounds or steps");
         }
 
-        return IntStream.iterate(seed, i -> {
-            int nextValue = i + (i <= seed ? steps : -steps);
-            return nextValue >= lowerBound && nextValue <= upperBound ? nextValue : i;
-        });
+        int start = Math.max(seed - Math.abs(seed - lowerBound), lowerBound);
+        int end = Math.min(seed + Math.abs(seed - upperBound), upperBound);
+
+        return IntStream.iterate(start, i -> i != end, i -> i + (i < seed ? steps : -steps))
+                .limit((end - start) / steps + 1);
     }
 }
