@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 // Credit to TitaniumTown and Jettpack
-@IfModAbsent(value = "modernfix")
+@IfModAbsent(value = "modernfix", aliases = {"stutterfix"})
 @Mixin(Util.class)
 public abstract class MCUtilMixin {
     @Shadow
@@ -41,7 +41,7 @@ public abstract class MCUtilMixin {
                 private volatile boolean shutdown;
 
                 @Override
-                public List<Runnable> shutdownNow() {
+                public @NotNull List<Runnable> shutdownNow() {
                     this.shutdown = true;
                     return Collections.emptyList();
                 }

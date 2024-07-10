@@ -2,8 +2,6 @@ package com.github.tatercertified.potatoptimize;
 
 import com.github.tatercertified.potatoptimize.config.PotatoptimizeConfig;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
