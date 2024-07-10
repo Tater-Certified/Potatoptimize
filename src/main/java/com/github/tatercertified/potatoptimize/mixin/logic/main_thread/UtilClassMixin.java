@@ -1,6 +1,7 @@
 package com.github.tatercertified.potatoptimize.mixin.logic.main_thread;
 
 import com.github.tatercertified.potatoptimize.utils.ServerMinionThread;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@IfModAbsent(value = "stutterfix")
 @Mixin(Util.class)
 public class UtilClassMixin {
 
