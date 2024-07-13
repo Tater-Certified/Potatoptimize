@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@IfModAbsent(value = "servercore")
+@IfModAbsent(value = "servercore", aliases = {"c2me"})
 @Mixin(FilledMapItem.class)
 public class MapChunkLoadingMixin {
 
