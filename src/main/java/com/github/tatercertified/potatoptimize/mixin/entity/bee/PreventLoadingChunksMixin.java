@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
@@ -27,7 +26,7 @@ public abstract class PreventLoadingChunksMixin extends Entity {
         super(type, world);
     }
 
-    @Inject(method = "isHiveNearFire", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/entity/BlockEntity;"), cancellable = true)
+    @Inject(method = "getHive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockEntity(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntityType;)Ljava/util/Optional;"), cancellable = true)
     private void cancelIfNotLoaded(CallbackInfoReturnable<Boolean> cir) {
         if (this.isChunkNotNear(this.getBlockPos(), this.getHivePos()) || !this.getWorld().isChunkLoaded(this.getHivePos())) {
             cir.setReturnValue(false);
@@ -39,11 +38,6 @@ public abstract class PreventLoadingChunksMixin extends Entity {
         if (this.isChunkNotNear(this.getBlockPos(), pos) || !this.getWorld().isChunkLoaded(pos)) {
             cir.setReturnValue(false);
         }
-    }
-
-    @Redirect(method = "isHiveValid", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/BeeEntity;isTooFar(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean cancelIfNotLoaded(BeeEntity instance, BlockPos pos) {
-        return this.isChunkNotNear(this.getBlockPos(), pos) || !this.getWorld().isChunkLoaded(pos);
     }
 
     // TODO Make this work with ChunkQuery

@@ -51,7 +51,6 @@
     "logic.main_thread.ExceptionHandlerInvoker",
     "logic.main_thread.MinecraftServerThreadPriorityMixin",
     "logic.main_thread.UtilClassMixin",
-    "logic.recipe_manager.RecipeManagerMixin",
     "logic.reduce_ray_casting.BlockViewCastingMixin",
     "logic.shape.SimplePairListMixin",
     "logic.shape.VoxelShapesMixin",
@@ -64,9 +63,6 @@
     "memory.reduce_alloc.ComposterMixin2",
     "memory.reduce_alloc.ComposterMixin3",
     "memory.reduce_alloc.EntityExplosionBehaviorMixin",
-    "memory.reduce_alloc.EntityTrackerEntryMixin",
-    "memory.reduce_alloc.LivingEntityMixin",
-    "memory.reduce_alloc.MobEntityMixin",
     "memory.reduce_alloc.NbtByteArrayMixin",
     "memory.reduce_alloc.NbtCompoundMixin",
     "memory.reduce_alloc.NbtIntArrayMixin",
@@ -102,7 +98,6 @@
     "unstream.nearest_item.NearestPlayersSensorMixin",
     "unstream.pathfinding.PatchNodeNavigatorMixin",
     "unstream.player_movement.PlayerMovementMixin",
-    "unstream.recipe_manager.StreamRecipeManagerMixin",
     "unstream.tacs.ThreadedAnvilUnstreamMixin",
     "world.biome_access.BiomeAccessMixin",
     "world.blending.BlendMixin",
@@ -110,15 +105,15 @@
     "world.farmland.FarmlandBlockMixin",
     "world.saving.DataIOSavingMixin",
     "world.saving.PersistentStateManagerMixin",
-    "world.saving.ServerWorldSavingMixin"
+    "world.saving.SavingServerChunkManagerMixin",
+    "world.saving.ServerWorldSavingMixin",
+    "world.saving.WorldUpdaterMixin"
   ],
   "client": [
     "fastmath.rounding.FastRoundingDebugRenderMixin",
     "fastmath.rounding.FastRoundingQuadsMixin",
     "threading.client_tick.ClientTickMixin",
-    "unstable.explosion_packets.ClientExplosionMixin",
-    "unstream.recipe_manager.ClientNetworkAccessor",
-    "unstream.recipe_manager.StreamClientPlayNetworkHandlerMixin"
+    "unstable.explosion_packets.ClientExplosionMixin"
   ],
   "server": [
     "feature.interaction_limiter.LimiterBlockItemMixin",

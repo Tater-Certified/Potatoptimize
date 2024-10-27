@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+// Credit to PaperMC PR #10171
 @IfModAbsent(value = "c2me")
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldSavingMixin {
@@ -24,18 +24,21 @@ public abstract class ServerWorldSavingMixin {
 
     @Shadow public abstract ServerChunkManager getChunkManager();
 
-    @Unique
-    private void saveLevel() {
+    private void saveLevelAsync() {
         if (this.enderDragonFight != null) {
             this.server.getSaveProperties().setDragonFight(this.enderDragonFight.toData());
         }
 
-        ((AsyncChunkManagerInterface)this.getChunkManager().getPersistentStateManager()).save(true);
+        // TODO Fix Async Chunk Saving
+        ((AsyncChunkManagerInterface)this.getChunkManager().getPersistentStateManager()).saveAsync();
     }
 
-    @Redirect(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;saveLevel()V"))
-    private void redirectToAsync(ServerWorld instance) {
-        //TODO Figure out what "close" is in
-        this.saveLevel();
+    @Redirect(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerChunkManager;save(Z)V"))
+    private void redirectToAsync(ServerChunkManager instance, boolean flush) {
+        if (flush) {
+            instance.save(true);
+        } else {
+            this.saveLevelAsync();
+        }
     }
 }

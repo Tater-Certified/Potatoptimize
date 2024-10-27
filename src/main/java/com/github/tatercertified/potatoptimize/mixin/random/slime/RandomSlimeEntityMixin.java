@@ -37,14 +37,6 @@ public abstract class RandomSlimeEntityMixin extends MobEntity implements Monste
         return false;
     }
 
-    // TODO Combine these checks into isAnySpawner
-    @Inject(method = "canSpawn", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/SpawnReason;SPAWNER:Lnet/minecraft/entity/SpawnReason;", shift = At.Shift.AFTER), cancellable = true)
-    private static void checkTrialSpawners(EntityType<SlimeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir) {
-        if (spawnReason == SpawnReason.TRIAL_SPAWNER) {
-            cir.setReturnValue(canMobSpawn(type, world, spawnReason, pos, random));
-        }
-    }
-
     // TODO Find a better way to do this
     /*
     @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/registry/entry/RegistryEntry;isIn(Lnet/minecraft/registry/tag/TagKey;)Z"))

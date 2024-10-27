@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
+import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +20,8 @@ public class TargetPredicateMixin {
     @Shadow private double baseMaxDistance;
 
     @Inject(method = "test", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getAttackDistanceScalingFactor(Lnet/minecraft/entity/Entity;)D", shift = At.Shift.BEFORE), cancellable = true)
-    private void quickCancelPathFinding(LivingEntity baseEntity, LivingEntity targetEntity, CallbackInfoReturnable<Boolean> cir, @Share("dist")LocalDoubleRef doubleRef) {
-        double f = baseEntity.squaredDistanceTo(targetEntity.getX(), targetEntity.getY(), targetEntity.getZ());
+    private void quickCancelPathFinding(ServerWorld world, LivingEntity tester, LivingEntity target, CallbackInfoReturnable<Boolean> cir, @Share("dist")LocalDoubleRef doubleRef) {
+        double f = tester.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
         doubleRef.set(f);
         if (f > this.baseMaxDistance * this.baseMaxDistance) {
             cir.setReturnValue(false);

@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.thread.NameableExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -31,7 +32,7 @@ public abstract class MCUtilMixin {
      * @reason Optimize worker threads
      */
     @Overwrite
-    private static ExecutorService createWorker(String name) {
+    private static NameableExecutor createWorker(String name) {
         int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, getMaxBackgroundThreads());
         ExecutorService executorService;
         if (i <= 0) {
@@ -75,6 +76,6 @@ public abstract class MCUtilMixin {
             };
         }
 
-        return executorService;
+        return new NameableExecutor(executorService);
     }
 }

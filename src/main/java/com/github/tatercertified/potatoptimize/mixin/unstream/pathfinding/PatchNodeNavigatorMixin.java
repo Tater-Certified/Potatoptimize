@@ -5,7 +5,7 @@ import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.entity.ai.pathing.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 import net.minecraft.world.chunk.ChunkCache;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -29,9 +29,9 @@ public abstract class PatchNodeNavigatorMixin {
     @Final
     private PathNodeMaker pathNodeMaker;
 
-    @Shadow @Nullable protected abstract Path findPathToAny(Profiler profiler, PathNode startNode, Map<TargetPathNode, BlockPos> positions, float followRange, int distance, float rangeMultiplier);
-
     @Shadow protected abstract Path createPath(PathNode endNode, BlockPos target, boolean reachesTarget);
+
+    @Shadow @Nullable protected abstract Path findPathToAny(PathNode startNode, Map<TargetPathNode, BlockPos> positions, float followRange, int distance, float rangeMultiplier);
 
     /**
      * @author QPCrummer
@@ -50,14 +50,14 @@ public abstract class PatchNodeNavigatorMixin {
                 TargetPathNode node = this.pathNodeMaker.getNode(pos.getX(), pos.getY(), pos.getZ());
                 map.put(node, pos);
             }
-            Path path = this.findPathToAny(world.getProfiler(), pathNode, map, followRange, distance, rangeMultiplier);
+            Path path = this.findPathToAny(pathNode, map, followRange, distance, rangeMultiplier);
             this.pathNodeMaker.clear();
             return path;
         }
     }
 
-    @Inject(method = "findPathToAny(Lnet/minecraft/util/profiler/Profiler;Lnet/minecraft/entity/ai/pathing/PathNode;Ljava/util/Map;FIF)Lnet/minecraft/entity/ai/pathing/Path;", at = @At(value = "INVOKE", target = "Ljava/util/Set;isEmpty()Z", ordinal = 1, shift = At.Shift.BEFORE), cancellable = true)
-    private void removeStreamAPI(Profiler profiler, PathNode startNode, Map<TargetPathNode, BlockPos> positions, float followRange, int distance, float rangeMultiplier, CallbackInfoReturnable<Path> cir, @Local(ordinal = 0) Set<TargetPathNode> set3, @Local(ordinal = 0) Set<TargetPathNode> set) {
+    @Inject(method = "findPathToAny(Lnet/minecraft/entity/ai/pathing/PathNode;Ljava/util/Map;FIF)Lnet/minecraft/entity/ai/pathing/Path;", at = @At(value = "INVOKE", target = "Ljava/util/Set;isEmpty()Z", ordinal = 1, shift = At.Shift.BEFORE), cancellable = true)
+    private void removeStreamAPI(PathNode startNode, Map<TargetPathNode, BlockPos> positions, float followRange, int distance, float rangeMultiplier, CallbackInfoReturnable<Path> cir, @Local(ordinal = 0) Set<TargetPathNode> set3, @Local(ordinal = 0) Set<TargetPathNode> set) {
         Optional<Path> optional;
         Path shortestPath = null;
         if (!set3.isEmpty()) {
@@ -82,7 +82,7 @@ public abstract class PatchNodeNavigatorMixin {
             }
         }
         optional = Optional.ofNullable(shortestPath);
-        profiler.pop();
+        Profilers.get().pop();
 
         cir.setReturnValue(optional.orElse(null));
     }

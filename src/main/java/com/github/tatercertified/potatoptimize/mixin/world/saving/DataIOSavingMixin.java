@@ -9,14 +9,16 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Util;
 import net.minecraft.world.PersistentState;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
 
-// Credit to Paper PR #9408
+// Credit to PaperMC PR #10171
 @IfModAbsent(value = "c2me")
 @Mixin(PersistentState.class)
 public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
@@ -27,17 +29,9 @@ public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
 
     @Shadow public abstract void setDirty(boolean dirty);
 
-    /**
-     * @author QPCrummer
-     * @reason Make async
-     */
-    @Overwrite
-    public void save(File file, RegistryWrapper.WrapperLookup registryLookup) {
-        save(file, false, registryLookup);
-    }
 
     @Override
-    public void save(File file, boolean async, RegistryWrapper.WrapperLookup registryLookup) {
+    public void saveAsync(Path file, RegistryWrapper.WrapperLookup registryLookup, @Nullable ExecutorService ioExecutor) {
         if (this.isDirty()) {
             NbtCompound compoundTag = new NbtCompound();
             compoundTag.put("data", this.writeNbt(new NbtCompound(), registryLookup));
@@ -45,19 +39,22 @@ public abstract class DataIOSavingMixin implements AsyncChunkSaveInterface {
 
             Runnable writeRunnable = () -> {
                 try {
-                    NbtIo.writeCompressed(compoundTag, file.toPath());
+                    NbtIo.writeCompressed(compoundTag, file);
                 } catch (IOException var4) {
                     ExceptionHandlerInvoker.getLogger().error("Could not save data {}", this, var4);
                 }
             };
 
-            if (async) {
+            if (ioExecutor == null) {
                 Util.getIoWorkerExecutor().execute(writeRunnable);
             } else {
-                writeRunnable.run();
+                ioExecutor.execute(writeRunnable);
             }
+
 
             this.setDirty(false);
         }
     }
+
+
 }

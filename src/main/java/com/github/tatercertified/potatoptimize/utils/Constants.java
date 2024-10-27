@@ -1,7 +1,5 @@
 package com.github.tatercertified.potatoptimize.utils;
 
-import net.minecraft.entity.EquipmentSlot;
-
 // Credit to Titanium Town
 
 /**
@@ -15,6 +13,5 @@ public final class Constants {
     public static final byte[] emptyByteArray = new byte[0];
     public static final String[] emptyStringArray = new String[0];
     public static final long[] emptyLongArray = new long[0];
-    public static final EquipmentSlot[] equipmentSlotArray = EquipmentSlot.values();
 
 }

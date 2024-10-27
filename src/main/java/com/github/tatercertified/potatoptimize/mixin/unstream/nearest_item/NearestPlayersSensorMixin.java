@@ -34,9 +34,9 @@ public class NearestPlayersSensorMixin {
 
         PlayerEntity nearest = null, nearestTargetable = null;
         for (PlayerEntity player : players) {
-            if (Sensor.testTargetPredicate(entity, player)) {
+            if (Sensor.testTargetPredicate(world, entity, player)) {
                 if (nearest == null) nearest = player;
-                if (Sensor.testAttackableTargetPredicate(entity, player)) {
+                if (Sensor.testAttackableTargetPredicate(world, entity, player)) {
                     nearestTargetable = player;
                     break;
                 }

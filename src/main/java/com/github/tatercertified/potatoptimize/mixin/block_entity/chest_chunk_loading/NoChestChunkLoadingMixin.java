@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DoubleBlockProperties;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
@@ -32,7 +32,7 @@ public class NoChestChunkLoadingMixin {
     }
 
     @Inject(method = "toPropertySource", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;", shift = At.Shift.AFTER), cancellable = true)
-    private static <S extends BlockEntity> void checkIfNull(BlockEntityType<S> blockEntityType, Function<BlockState, DoubleBlockProperties.Type> typeMapper, Function<BlockState, Direction> function, DirectionProperty directionProperty, BlockState state, WorldAccess world, BlockPos pos, BiPredicate<WorldAccess, BlockPos> fallbackTester, CallbackInfoReturnable<DoubleBlockProperties.PropertySource<S>> cir, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 0) S blockEntity) {
+    private static <S extends BlockEntity> void checkIfNull(BlockEntityType<S> blockEntityType, Function<BlockState, DoubleBlockProperties.Type> typeMapper, Function<BlockState, Direction> directionMapper, Property<Direction> property, BlockState state, WorldAccess world, BlockPos pos, BiPredicate<WorldAccess, BlockPos> fallbackTester, CallbackInfoReturnable<DoubleBlockProperties.PropertySource<S>> cir, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 0) S blockEntity) {
         if (blockState == null) {
             cir.setReturnValue(new DoubleBlockProperties.PropertySource.Single<>(blockEntity));
         }
