@@ -33,7 +33,7 @@ public class PotatoptimizeConfig {
                 properties.load(propertiesReader);
                 properties.forEach((ruleName, enabled) -> this.addMixinRule((String) ruleName, Boolean.parseBoolean((String) enabled)));
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Potatoptimize mixin config default properties could not be read!", e);
                 throw new IllegalStateException("Potatoptimize mixin config default properties could not be read!");
             }
         } catch (IOException e) {

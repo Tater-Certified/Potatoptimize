@@ -1,36 +1,27 @@
 plugins {
-    id 'fabric-loom' version '1.8-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
-loom {
-    accessWidenerPath = file("src/main/resources/potatoptimize.accesswidener")
-    runtimeOnlyLog4j = true
+base {
+    archivesName = project.archives_base_name
 }
 
 
 repositories {
+    mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
-
-    //modCompileOnly("com.github.CaffeineMC:lithium-fabric:mc1.20.4-0.12.1")
-
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.6")))
-    include(implementation("com.moulberry:mixinconstraints:1.0.1"))
+    include(implementation 'com.github.Tater-Certified:MixinConstraints:4856759a06')
 }
 
 processResources {
@@ -54,7 +45,7 @@ tasks.withType(JavaCompile).configureEach {
     // If Javadoc is generated, this must be specified in that task too.
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
+        it.options.release.set(targetJavaVersion)
     }
 }
 
@@ -63,7 +54,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -72,14 +62,15 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
     }

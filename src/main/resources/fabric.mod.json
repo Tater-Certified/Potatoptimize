@@ -2,21 +2,14 @@
   "schemaVersion": 1,
   "id": "potatoptimize",
   "version": "${version}",
-  "name": "potatoptimize",
-  "description": "Non-vanilla optimizations for Minecraft Fabric",
-  "authors": [
-    "QPCrummer"
-  ],
-  "contact": {
-    "repo": "https://github.com/Tater-Certified/potatoptimize"
-  },
-  "license": "LGPL-3.0",
+  "name": "Potatoptimize",
+  "description": "Let Tater optimize your game!",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
   "icon": "assets/potatoptimize/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "com.github.tatercertified.potatoptimize.client.PotatoptimizeClient"
-    ],
     "main": [
       "com.github.tatercertified.potatoptimize.Potatoptimize"
     ]
@@ -24,19 +17,8 @@
   "mixins": [
     "potatoptimize.mixins.json"
   ],
-  "accessWidener" : "potatoptimize.accesswidener",
   "depends": {
     "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": ">=1.21.3"
-  },
-  "custom": {
-    "lithium:options": {
-      "alloc.composter": false,
-      "alloc.enum_values.living_entity": false
-    }
-  },
-  "recommends": {
-    "lithium": "*"
+    "minecraft": ">=${minecraft_version}"
   }
 }

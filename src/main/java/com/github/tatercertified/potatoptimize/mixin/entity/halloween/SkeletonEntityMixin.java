@@ -1,35 +1,34 @@
 package com.github.tatercertified.potatoptimize.mixin.entity.halloween;
 
-import com.github.tatercertified.potatoptimize.utils.interfaces.IsHalloweenInterface;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import com.github.tatercertified.potatoptimize.utils.interfaces.HalloweenInterface;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractSkeletonEntity.class)
-public abstract class SkeletonEntityMixin extends HostileEntity {
+@Mixin(AbstractSkeleton.class)
+public abstract class SkeletonEntityMixin extends Monster {
 
-    protected SkeletonEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
+    protected SkeletonEntityMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/AbstractSkeletonEntity;setCanPickUpLoot(Z)V", shift = At.Shift.AFTER), cancellable = true)
-    private void optimizedCheckHalloween(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
-        if (((IsHalloweenInterface)this.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
-            this.equipStack(EquipmentSlot.HEAD, new ItemStack(random.nextFloat() < 0.1f ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN));
-            this.armorDropChances[EquipmentSlot.HEAD.getEntitySlotId()] = 0.0f;
+    @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z"), cancellable = true)
+    private void optimizedCheckHalloween(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, SpawnGroupData entityData, CallbackInfoReturnable<SpawnGroupData> cir) {
+        if (((HalloweenInterface)this.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
+            this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(random.nextFloat() < 0.1f ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN));
+            this.setDropChance(EquipmentSlot.HEAD, 0.0F);
         }
         cir.setReturnValue(entityData);
     }
