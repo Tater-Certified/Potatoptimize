@@ -1,0 +1,30 @@
+{
+  "loader": {
+    "name": "java_plain",
+    "version": "1.0"
+  },
+  "license": "${license}",
+  "plugins": [
+    {
+      "id": "${mod_id}",
+      "entrypoint": "com.github.tatercertified.sponge.PotatoptimizeSponge",
+      "name": "${mod_name}",
+      "description": "${description}",
+      "version": "${version}",
+      "branding": {},
+      "links": {
+        "homepage": "${homepage_url}",
+        "source": "${source_url}",
+        "issues": "${issue_url}"
+      },
+      "dependencies": [
+        {
+          "id": "spongeapi",
+          "version": "${sponge_version}",
+          "load-order": "after",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

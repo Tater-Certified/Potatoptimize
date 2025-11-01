@@ -1,0 +1,30 @@
+{
+  "compatibilityLevel": "JAVA_16",
+  "required": false,
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "com.github.tatercertified.y_intmdry.NoDimMixinPlugin",
+  "package": "com.github.tatercertified.y_intmdry.mixin",
+  "mixins": [
+    "v1_14_3.BooleanValueMixin",
+    "v1_14_3.EndPortalMixin",
+    "v1_14_3.GameRuleRegistrationInterMixin",
+    "v1_14_3.GameRuleRegistrationSRGMixin",
+    "v1_14_3.GameRuleRegistrationMojMixin",
+    "v1_14_3.NetherPortalMixin",
+    "v1_14_3.TheEndGatewayMixin",
+    "v1_16.GameRuleRegistrationMixin",
+    "v1_17.TheGatewayPortalMixin",
+    "v1_21.GatewayPortalMixin",
+    "v1_21_5.EndPortalMixin",
+    "v1_21_5.GatewayPortalMixin",
+    "v1_21_5.NetherPortalMixin",
+    "v1_21_10.EndPortalMixin",
+    "v1_21_10.GatewayPortalMixin",
+    "v1_21_10.NetherPortalMixin"
+  ],
+  "client": [],
+  "server": []
+}
