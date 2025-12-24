@@ -1,11 +1,17 @@
+/**
+ * Copyright (c) 2025 QPCrummer
+ * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
+ */
 package com.github.tatercertified.vanilla.mixin.experimental.tick_skipping;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.Util;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.entity.EntityTickList;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,15 +25,14 @@ import java.util.function.Consumer;
 
 /**
  * This optimization skips ticking mobs if the server is lagging
+ *
  * @author QPCrummer
  * @since 2.0.0
  * @version 1.0.0
  */
 @Mixin(ServerLevel.class)
 public class ServerLevelMixin {
-    @Shadow
-    @Final
-    private MinecraftServer server;
+    @Shadow @Final private MinecraftServer server;
     private long cachedNSPT;
     private int lastEntityTickIndex = 0;
 
@@ -38,11 +43,19 @@ public class ServerLevelMixin {
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     private void potatoptimize$assignNSPT(BooleanSupplier booleanSupplier, CallbackInfo ci) {
-        this.cachedNSPT = TickThresholdAccessor.getOverloadedThresholdNanos() + 20L *  this.server.tickRateManager().nanosecondsPerTick();
+        this.cachedNSPT =
+                TickThresholdAccessor.getOverloadedThresholdNanos()
+                        + 20L * this.server.tickRateManager().nanosecondsPerTick();
     }
 
     // TODO Tick players separately
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"))
+    @Redirect(
+            method = "tick",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"))
     private void potatoptimize$UseAForLoop(EntityTickList instance, Consumer<Entity> consumer) {
         Int2ObjectMap<Entity> entities = ((EntityTickingListAccessor) instance).getActive();
         if (entities.isEmpty()) {

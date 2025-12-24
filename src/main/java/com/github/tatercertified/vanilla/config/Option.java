@@ -1,7 +1,12 @@
+/**
+ * Copyright (c) 2025 QPCrummer
+ * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
+ */
 package com.github.tatercertified.vanilla.config;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
@@ -43,7 +48,9 @@ public class Option {
     }
 
     public boolean isEnabledRecursive(PotatoptimizeConfig config) {
-        return this.enabled && (config.getParent(this) == null || config.getParent(this).isEnabledRecursive(config));
+        return this.enabled
+                && (config.getParent(this) == null
+                        || config.getParent(this).isEnabledRecursive(config));
     }
 
     public boolean isOverridden() {
@@ -67,7 +74,9 @@ public class Option {
     }
 
     public Collection<String> getDefiningMods() {
-        return this.modDefined != null ? Collections.unmodifiableCollection(this.modDefined) : Collections.emptyList();
+        return this.modDefined != null
+                ? Collections.unmodifiableCollection(this.modDefined)
+                : Collections.emptyList();
     }
 
     public void addDependency(Option dependencyOption, boolean requiredValue) {
@@ -79,12 +88,20 @@ public class Option {
 
     public boolean disableIfDependenciesNotMet(Logger logger, PotatoptimizeConfig config) {
         if (this.dependencies != null && this.isEnabled()) {
-            for (Object2BooleanMap.Entry<Option> dependency : this.dependencies.object2BooleanEntrySet()) {
+            for (Object2BooleanMap.Entry<Option> dependency :
+                    this.dependencies.object2BooleanEntrySet()) {
                 Option option = dependency.getKey();
                 boolean requiredValue = dependency.getBooleanValue();
                 if (option.isEnabledRecursive(config) != requiredValue) {
                     this.enabled = false;
-                    logger.warn("Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.", this.name, option.name, requiredValue, option.isEnabled(), this.name, this.enabled);
+                    logger.warn(
+                            "Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.",
+                            this.name,
+                            option.name,
+                            requiredValue,
+                            option.isEnabled(),
+                            this.name,
+                            this.enabled);
                     return true;
                 }
             }

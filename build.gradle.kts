@@ -7,9 +7,9 @@ plugins {
     id("maven-publish")
     id("idea")
     id("eclipse")
+    id("xyz.wagyourtail.unimined") version "8e64092954"
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
-    alias(libs.plugins.unimined)
 }
 
 base {
@@ -51,7 +51,6 @@ spotless {
 val fabric: SourceSet by sourceSets.creating
 val forge: SourceSet by sourceSets.creating
 val neoforge: SourceSet by sourceSets.creating
-val paper: SourceSet by sourceSets.creating
 val sponge: SourceSet by sourceSets.creating
 
 val mainCompileOnly: Configuration by configurations.creating
@@ -61,9 +60,6 @@ configurations.annotationProcessor.get().extendsFrom(mainAnnotationProcessor)
 val fabricCompileOnly: Configuration by configurations.getting
 val forgeCompileOnly: Configuration by configurations.getting
 val neoforgeCompileOnly: Configuration by configurations.getting
-val paperCompileOnly: Configuration by configurations.getting {
-    extendsFrom(mainCompileOnly)
-}
 val spongeCompileOnly: Configuration by configurations.getting {
     extendsFrom(mainCompileOnly)
 }
@@ -84,15 +80,14 @@ tasks.withType<RemapJarTask> {
 }
 
 repositories {
-    // maven("https://maven.neuralnexus.dev/mirror")
     mavenCentral()
     unimined.fabricMaven()
     unimined.minecraftForgeMaven()
     unimined.neoForgedMaven()
     unimined.parchmentMaven()
     unimined.spongeMaven()
-    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://maven.neuralnexus.dev/snapshots")
 }
 
 unimined.minecraft {
@@ -136,15 +131,6 @@ unimined.minecraft(neoforge) {
     defaultRemapJar = true
 }
 
-unimined.minecraft(paper) {
-    combineWith(sourceSets.main.get())
-    accessTransformer {
-        // https://github.com/PaperMC/Paper/blob/main/build-data/paper.at
-        accessTransformer("${rootProject.projectDir}/src/paper/paper.at")
-    }
-    defaultRemapJar = true
-}
-
 unimined.minecraft(sponge) {
     combineWith(sourceSets.main.get())
     defaultRemapJar = true
@@ -156,9 +142,10 @@ dependencies {
     mainCompileOnly(libs.mixin)
     mainCompileOnly(libs.mixinextras)
     mainCompileOnly("com.github.Tater-Certified:MixinConstraints:4856759a06")
-    paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")
-    paperCompileOnly(libs.ignite.api)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
+    implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
+    implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
+    implementation("org.tomlj:tomlj:1.1.1")
 }
 
 tasks.withType<ProcessResources> {
@@ -166,11 +153,9 @@ tasks.withType<ProcessResources> {
         "fabric.mod.json",
         "pack.mcmeta",
         "assets/potatoptimize/potatoptimize-mixin-config-default.properties",
-        "assets/potatoptimize/icon.png",
         "META-INF/mods.toml",
         "META-INF/neoforge.mods.toml",
         "plugin.yml",
-        "paper-plugin.yml",
         "ignite.mod.json",
         "META-INF/sponge_plugins.json",
     )) {
@@ -185,7 +170,6 @@ tasks.jar {
         zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
         forge.output,
         neoforge.output,
-        paper.output,
         sponge.output,
     )
 

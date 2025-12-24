@@ -9,7 +9,6 @@
     "blockentity.ticking.sign.HangingSignMixin",
     "blockentity.ticking.sign.SignBlockEntityMixin",
     "blockentity.ticking.sign.WallHangingSignMixin",
-    "entity.halloween.BatEntityMixin",
     "entity.halloween.IsHalloweenMixin",
     "entity.halloween.SkeletonEntityMixin",
     "entity.halloween.ZombieEntityMixin",
