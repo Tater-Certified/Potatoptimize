@@ -1,0 +1,29 @@
+{
+  "compatibilityLevel": "JAVA_21",
+  "required": false,
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "com.github.tatercertified.y_intmdry.config.MixinConfig",
+  "package": "com.github.tatercertified.y_intmdry.mixin",
+  "mixins": [
+    "blockentity.ticking.sign.AbstractSignBlockMixin",
+    "blockentity.ticking.sign.HangingSignMixin",
+    "blockentity.ticking.sign.SignBlockEntityMixin",
+    "blockentity.ticking.sign.WallHangingSignMixin",
+    "entity.halloween.IsHalloweenMixin",
+    "entity.halloween.SkeletonEntityMixin",
+    "entity.halloween.ZombieEntityMixin",
+    "entity.navigation.CancelNavigationMixin",
+    "entity.spawning.slime.RandomSlimeEntityMixin",
+    "entity.spawning.slime.SlimeChunkMixin",
+    "entity.teleport.portal.NetherPortalMixin",
+    "experimental.tick_skipping.EntityTickingListAccessor",
+    "experimental.tick_skipping.ServerLevelMixin",
+    "experimental.tick_skipping.TickThresholdAccessor",
+    "player.stats.PlayerEntityStatsMixin"
+  ],
+  "client": [],
+  "server": []
+}

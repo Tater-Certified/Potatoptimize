@@ -1,0 +1,13 @@
+[versions]
+spotless = "8.1.0"
+shadow = "9.3.0"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
+mixin = { group = "org.spongepowered", name = "mixin", version = "0.8.5-SNAPSHOT" }
+mixinextras = { group = "io.github.llamalad7", name = "mixinextras-common", version = "0.5.0"}
+asm = { group = "org.ow2.asm", name = "asm-tree", version = "9.9.1"}
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

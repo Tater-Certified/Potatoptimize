@@ -4,8 +4,8 @@ Let Tater optimize your game! It may be more potato than vanilla when it is done
 ---
 
 ## About Potatoptimize
-This is an **experimental** optimization mod that pools optimizations from PaperMC, Gale, Mirai, Velocity, Yatopia, Jettpack, Leaf, and many more sources, as well as my own optimizations. 
-While the majority of the optimizations are for servers, there are a few that apply only to the client. That being said, all the server optimizations can apply to the client in singleplayer.
+This is an **experimental** optimization mod that pools some optimizations from PaperMC as well as my own optimizations. 
+While the majority of the optimizations are for servers, all the server optimizations can apply to the client in singleplayer.
 This mod *does not* intend to respect vanilla parity, however in general the differences with and without this mod are very minor. 
 
 ## Here be taters!
