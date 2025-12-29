@@ -8,6 +8,11 @@ import com.github.tatercertified.vanilla.Potatoptimize;
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 
+import dev.neuralnexus.taterapi.meta.Constraint;
+import dev.neuralnexus.taterapi.meta.MetaAPI;
+import dev.neuralnexus.taterapi.meta.enums.Platform;
+import dev.neuralnexus.taterapi.meta.platforms.TaterMetadata;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
@@ -19,13 +24,21 @@ import java.util.List;
 import java.util.Set;
 
 public class MixinConfig implements IMixinConfigPlugin {
-    private static final String MIXIN_PACKAGE_ROOT =
-            "com.github.tatercertified.potatoptimize.mixin.";
+    private static String MIXIN_PACKAGE_ROOT;
     private final Logger logger = LogManager.getLogger("PotatoptimizeConfig");
     private PotatoptimizeConfig config;
 
     @Override
     public void onLoad(String mixinPackage) {
+        // Loader detection
+        detectLoader();
+
+        if (MetaAPI.instance().platform().isFabric()) {
+            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.y_intmdry.mixin.";
+        } else {
+            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.mixin.";
+        }
+
         MixinConstraintsBootstrap.init(mixinPackage);
 
         try {
@@ -122,4 +135,18 @@ public class MixinConfig implements IMixinConfigPlugin {
             ClassNode targetClass,
             String mixinClassName,
             IMixinInfo mixinInfo) {}
+
+    private void detectLoader() {
+        for (Platform platform :
+                Set.of(Platform.FABRIC, Platform.SPONGE, Platform.FORGE, Platform.NEOFORGE)) {
+            if (Constraint.builder().platform(platform.ref()).build().result()) {
+                switch (platform) {
+                    case FABRIC -> TaterMetadata.initFabric();
+                    case FORGE -> TaterMetadata.initForge();
+                    case NEOFORGE -> TaterMetadata.initNeoForge();
+                    default -> TaterMetadata.initSponge();
+                }
+            }
+        }
+    }
 }
