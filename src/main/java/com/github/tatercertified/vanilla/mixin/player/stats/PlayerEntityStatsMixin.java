@@ -6,7 +6,7 @@ package com.github.tatercertified.vanilla.mixin.player.stats;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -56,8 +56,8 @@ public abstract class PlayerEntityStatsMixin extends Player {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/server/level/ServerPlayer;awardStat(Lnet/minecraft/resources/Identifier;)V"))
-    private void potatoptimize$delayStat(ServerPlayer instance, Identifier resourceLocation) {
+                                    "Lnet/minecraft/server/level/ServerPlayer;awardStat(Lnet/minecraft/resources/ResourceLocation;)V"))
+    private void potatoptimize$delayStat(ServerPlayer instance, ResourceLocation resourceLocation) {
         if (this.shouldIncrementStats) {
             this.awardStat(resourceLocation, 20);
         }

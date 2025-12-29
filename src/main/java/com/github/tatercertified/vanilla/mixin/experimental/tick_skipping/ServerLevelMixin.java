@@ -6,9 +6,9 @@ package com.github.tatercertified.vanilla.mixin.experimental.tick_skipping;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
+import net.minecraft.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.entity.EntityTickList;
 

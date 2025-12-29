@@ -48,7 +48,7 @@ public abstract class IsHalloweenMixin implements HalloweenInterface {
             at =
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/util/Util;getNanos()J",
+                            target = "Lnet/minecraft/Util;getNanos()J",
                             ordinal = 0,
                             shift = At.Shift.AFTER))
     private void hallowsEveCheck(CallbackInfo ci) {

@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -58,26 +57,11 @@ public abstract class RandomSlimeEntityMixin extends Mob implements Enemy {
         }
     }
 
-    @Redirect(
-            method = "checkSlimeSpawnRules",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/core/Holder;is(Lnet/minecraft/tags/TagKey;)Z"))
-    private static boolean reorganizeSurfaceSpawning(
-            Holder<Biome> instance,
-            TagKey<Biome> tTagKey,
-            @Local(ordinal = 0, argsOnly = true) EntityType<Slime> type,
-            @Local(ordinal = 0, argsOnly = true) LevelAccessor world,
-            @Local(ordinal = 0, argsOnly = true) EntitySpawnReason spawnReason,
-            @Local(ordinal = 0, argsOnly = true) BlockPos pos,
-            @Local(ordinal = 0, argsOnly = true) RandomSource random) {
+    @Redirect(method = "checkSlimeSpawnRules", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Holder;is(Lnet/minecraft/tags/TagKey;)Z"))
+    private static boolean reorganizeSurfaceSpawning(Holder<Biome> instance, TagKey<Biome> tTagKey, @Local(ordinal = 0, argsOnly = true) EntityType<Slime> type, @Local(ordinal = 0, argsOnly = true) LevelAccessor world, @Local(ordinal = 0, argsOnly = true) EntitySpawnReason spawnReason, @Local(ordinal = 0, argsOnly = true) BlockPos pos, @Local(ordinal = 0, argsOnly = true) RandomSource random) {
         if (pos.getY() < 70 && pos.getY() > 50 && instance.is(tTagKey)) {
             float randomFloat = random.nextFloat(); // This will slightly change parity
-            if (randomFloat
-                            < world.environmentAttributes()
-                                    .getValue(EnvironmentAttributes.SURFACE_SLIME_SPAWN_CHANCE, pos)
-                    && world.getMaxLocalRawBrightness(pos) <= random.nextInt(8)) {
+            if (randomFloat > 0.5F && randomFloat > world.getMoonBrightness() && world.getMaxLocalRawBrightness(pos) <= random.nextInt(8)) {
                 return checkMobSpawnRules(type, world, spawnReason, pos, random);
             }
         }
