@@ -10,8 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dev.neuralnexus.taterapi.meta.*;
-import dev.neuralnexus.taterapi.meta.enums.Platform;
-import dev.neuralnexus.taterapi.meta.platforms.TaterMetadata;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 
@@ -24,9 +22,12 @@ import org.tomlj.TomlParseResult;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.*;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 public class PotatoptimizeConfig {
     private static final Logger LOGGER = LogManager.getLogger("PotatoptimizeConfig");
@@ -37,9 +38,6 @@ public class PotatoptimizeConfig {
     private final Set<Option> optionsWithDependencies = new ObjectLinkedOpenHashSet<>();
 
     private PotatoptimizeConfig() {
-        // Loader detection
-        detectLoader();
-
         // Defines the default rules which can be configured by the user or other mods.
         try (InputStream defaultPropertiesStream =
                 PotatoptimizeConfig.class.getResourceAsStream(
@@ -63,20 +61,6 @@ public class PotatoptimizeConfig {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void detectLoader() {
-        for (Platform platform :
-                Set.of(Platform.FABRIC, Platform.SPONGE, Platform.FORGE, Platform.NEOFORGE)) {
-            if (Constraint.builder().platform(platform.ref()).build().result()) {
-                switch (platform) {
-                    case FABRIC -> TaterMetadata.initFabric();
-                    case FORGE -> TaterMetadata.initForge();
-                    case NEOFORGE -> TaterMetadata.initNeoForge();
-                    default -> TaterMetadata.initSponge();
-                }
-            }
         }
     }
 
@@ -200,15 +184,15 @@ public class PotatoptimizeConfig {
 
     private void applyModOverrides() {
         for (ModContainer<?> container : MetaAPI.instance().mods(MetaAPI.instance().platform())) {
-            Map<String, Boolean> overrides = new HashMap<>();
+            Map<String, Boolean> overrides;
             if (container.platform().isFabric()) {
-                overrides = getOverridesFabric(container);
+                overrides = getOverridesFabric();
             } else if (container.platform().isForge()) {
-                overrides = getOverridesForge(container);
+                overrides = getOverridesForge();
             } else if (container.platform().isNeoForge()) {
                 overrides = getOverridesNeoForge(container);
             } else {
-                overrides = getOverridesSponge(container);
+                overrides = getOverridesSponge();
             }
 
             for (Map.Entry<String, Boolean> override : overrides.entrySet()) {
@@ -217,81 +201,106 @@ public class PotatoptimizeConfig {
         }
     }
 
-    private Map<String, Boolean> getOverridesFabric(ModContainer<?> container) {
-        try (ModResource resource = container.resource()) {
-            Path modResourceFile = resource.getResourceOrThrow("fabric.mod.json");
-            try (BufferedReader reader =
-                    new BufferedReader(new FileReader(modResourceFile.toFile()))) {
+    private Map<String, Boolean> getOverridesFabric() {
+        try (JarFile file = new JarFile(this.getJarFile())) {
+            ZipEntry entry = file.getEntry("fabric.mod.json");
+            try (final InputStream is = file.getInputStream(entry);
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                 JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-                JsonObject potatoptimizeOptions =
-                        root.getAsJsonObject("custom").getAsJsonObject(JSON_KEY_MOD_OPTIONS);
-                Type mapType = new TypeToken<@NotNull Map<String, Boolean>>() {}.getType();
-                return new Gson().fromJson(potatoptimizeOptions, mapType);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Map<String, Boolean> getOverridesSponge(ModContainer<?> container) {
-        try (ModResource resource = container.resource()) {
-            Path modResourceFile = resource.getResourceOrThrow("META-INF/sponge_plugins.json");
-            try (BufferedReader reader =
-                    new BufferedReader(new FileReader(modResourceFile.toFile()))) {
-                JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-                JsonObject potatoptimizeOptions =
-                        root.getAsJsonObject("custom").getAsJsonObject(JSON_KEY_MOD_OPTIONS);
-                Type mapType = new TypeToken<@NotNull Map<String, Boolean>>() {}.getType();
-                return new Gson().fromJson(potatoptimizeOptions, mapType);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Map<String, Boolean> getOverridesForge(ModContainer<?> container) {
-        try (ModResource resource = container.resource()) {
-            Path modResourceFile = resource.getResourceOrThrow("META-INF/mods.toml");
-            String tomlContent = Files.readString(modResourceFile);
-            TomlParseResult result = Toml.parse(tomlContent);
-            TomlArray customArray = result.getArray("custom");
-            if (customArray != null) {
-                for (int i = 0; i < customArray.size(); i++) {
-                    Object element = customArray.get(i);
-                    if (element instanceof TomlParseResult table) {
-                        Map<String, Boolean> map = new HashMap<>();
-                        for (Map.Entry<String, Object> entry : table.entrySet()) {
-                            map.put(entry.getKey(), (Boolean) entry.getValue());
-                        }
-                        return map;
-                    }
+                JsonObject custom = root.getAsJsonObject("custom");
+                if (custom == null) {
+                    return Map.of();
+                } else {
+                    JsonObject potatoptimizeOptions = custom.getAsJsonObject(JSON_KEY_MOD_OPTIONS);
+                    Type mapType = new TypeToken<@NotNull Map<String, Boolean>>() {}.getType();
+                    return new Gson().fromJson(potatoptimizeOptions, mapType);
                 }
             }
-            return Map.of();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private File getJarFile() {
+        CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
+        if (codeSource != null) {
+            URL location = codeSource.getLocation();
+            try {
+                return new File(location.toURI());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException(
+                    "Cannot determine code source for class: " + this.getClass().getName());
+        }
+    }
+
+    private Map<String, Boolean> getOverridesSponge() {
+        try (JarFile file = new JarFile(this.getJarFile())) {
+            ZipEntry entry = file.getEntry("META-INF/sponge_plugins.json");
+            try (final InputStream is = file.getInputStream(entry);
+                 final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+                JsonObject custom = root.getAsJsonObject("custom");
+                if (custom == null) {
+                    return Map.of();
+                } else {
+                    JsonObject potatoptimizeOptions = custom.getAsJsonObject(JSON_KEY_MOD_OPTIONS);
+                    Type mapType = new TypeToken<@NotNull Map<String, Boolean>>() {}.getType();
+                    return new Gson().fromJson(potatoptimizeOptions, mapType);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, Boolean> getOverridesForge() {
+        try (JarFile file = new JarFile(this.getJarFile())) {
+            ZipEntry zipEntry = file.getEntry("META-INF/mods.toml");
+            try (final InputStream is = file.getInputStream(zipEntry)) {
+                TomlParseResult result = Toml.parse(is);
+                TomlArray customArray = result.getArray("custom");
+                if (customArray != null) {
+                    for (int i = 0; i < customArray.size(); i++) {
+                        Object element = customArray.get(i);
+                        if (element instanceof TomlParseResult table) {
+                            Map<String, Boolean> map = new HashMap<>();
+                            for (Map.Entry<String, Object> entry : table.entrySet()) {
+                                map.put(entry.getKey(), (Boolean) entry.getValue());
+                            }
+                            return map;
+                        }
+                    }
+                }
+                return Map.of();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private Map<String, Boolean> getOverridesNeoForge(ModContainer<?> container) {
-        try (ModResource resource = container.resource()) {
-            Path modResourceFile = resource.getResourceOrThrow("META-INF/neoforge.mods.toml");
-            String tomlContent = Files.readString(modResourceFile);
-            TomlParseResult result = Toml.parse(tomlContent);
-            TomlArray customArray = result.getArray("custom");
-            if (customArray != null) {
-                for (int i = 0; i < customArray.size(); i++) {
-                    Object element = customArray.get(i);
-                    if (element instanceof TomlParseResult table) {
-                        Map<String, Boolean> map = new HashMap<>();
-                        for (Map.Entry<String, Object> entry : table.entrySet()) {
-                            map.put(entry.getKey(), (Boolean) entry.getValue());
+        try (JarFile file = new JarFile(this.getJarFile())) {
+            ZipEntry zipEntry = file.getEntry("META-INF/neoforge.mods.toml");
+            try (final InputStream is = file.getInputStream(zipEntry)) {
+                TomlParseResult result = Toml.parse(is);
+                TomlArray customArray = result.getArray("custom");
+                if (customArray != null) {
+                    for (int i = 0; i < customArray.size(); i++) {
+                        Object element = customArray.get(i);
+                        if (element instanceof TomlParseResult table) {
+                            Map<String, Boolean> map = new HashMap<>();
+                            for (Map.Entry<String, Object> entry : table.entrySet()) {
+                                map.put(entry.getKey(), (Boolean) entry.getValue());
+                            }
+                            return map;
                         }
-                        return map;
                     }
                 }
+                return Map.of();
             }
-            return Map.of();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

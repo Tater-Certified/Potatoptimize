@@ -95,7 +95,6 @@ unimined.minecraft {
     mappings {
         parchment(parchmentMinecraft, parchmentVersion)
         mojmap()
-        devFallbackNamespace("official")
     }
     defaultRemapJar = false
 }
@@ -141,7 +140,7 @@ dependencies {
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
     mainCompileOnly(libs.mixinextras)
-    mainCompileOnly("com.github.Tater-Certified:MixinConstraints:4856759a06")
+    implementation("com.github.Tater-Certified:MixinConstraints:4856759a06")
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
     implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
     implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
@@ -164,6 +163,14 @@ tasks.withType<ProcessResources> {
 }
 
 tasks.jar {
+    enabled = false
+}
+
+tasks.assemble {
+    dependsOn(tasks.shadowJar)
+}
+
+tasks.shadowJar {
     dependsOn("relocateFabricJar")
 
     from(

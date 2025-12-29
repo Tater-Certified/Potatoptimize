@@ -10,8 +10,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
 @Mod(Potatoptimize.MOD_ID)
-public class NoDimNeoForge {
-    public NoDimNeoForge(IEventBus eventBus) {
+public class PotatoptimizeNeoForge {
+    public PotatoptimizeNeoForge(IEventBus eventBus) {
         Potatoptimize.onInitialize();
     }
 }
