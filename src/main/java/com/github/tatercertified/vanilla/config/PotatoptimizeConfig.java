@@ -240,7 +240,7 @@ public class PotatoptimizeConfig {
         try (JarFile file = new JarFile(this.getJarFile())) {
             ZipEntry entry = file.getEntry("META-INF/sponge_plugins.json");
             try (final InputStream is = file.getInputStream(entry);
-                 final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                 JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
                 JsonObject custom = root.getAsJsonObject("custom");
                 if (custom == null) {
