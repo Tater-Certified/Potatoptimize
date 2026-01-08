@@ -118,6 +118,7 @@ unimined.minecraft(forge) {
     combineWith(sourceSets.main.get())
     minecraftForge {
         loader(forgeVersion)
+        mixinConfig("$modId.vanilla.mixins.json")
     }
     defaultRemapJar = true
 }
@@ -126,6 +127,7 @@ unimined.minecraft(neoforge) {
     combineWith(sourceSets.main.get())
     neoForge {
         loader(neoForgeVersion)
+        mixinConfig("$modId.vanilla.mixins.json")
     }
     defaultRemapJar = true
 }
@@ -140,8 +142,8 @@ dependencies {
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
     mainCompileOnly(libs.mixinextras)
-    implementation("com.github.Tater-Certified:MixinConstraints:4856759a06")
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
+    implementation("com.github.Tater-Certified:MixinConstraints:4856759a06")
     implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
     implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
     implementation("org.tomlj:tomlj:1.1.1")
@@ -155,7 +157,6 @@ tasks.withType<ProcessResources> {
         "META-INF/mods.toml",
         "META-INF/neoforge.mods.toml",
         "plugin.yml",
-        "ignite.mod.json",
         "META-INF/sponge_plugins.json",
     )) {
         expand(project.properties)
@@ -172,6 +173,9 @@ tasks.assemble {
 
 tasks.shadowJar {
     dependsOn("relocateFabricJar")
+
+    relocate("org.slf4j", "com.github.tatercertified.shadow.slf4j")
+    exclude("org/checkerframework/**")
 
     from(
         zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
@@ -193,7 +197,7 @@ tasks.shadowJar {
                 "Implementation-Timestamp" to Instant.now().toString(),
                 "FMLCorePluginContainsFMLMod" to "true",
                 "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" to "$modId.mixins.vanilla.json"
+                "MixinConfigs" to "$modId.vanilla.mixins.json"
             )
         )
     }

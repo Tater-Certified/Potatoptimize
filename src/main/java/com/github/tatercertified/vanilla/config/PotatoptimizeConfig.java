@@ -226,6 +226,17 @@ public class PotatoptimizeConfig {
         if (codeSource != null) {
             URL location = codeSource.getLocation();
             try {
+                // handling nested JAR URI
+                String path = location.toString();
+                if (path.startsWith("jar:")) {
+                    // extract the actual file path from jar:file:/path!/entry
+                    path = path.substring(4); // Remove "jar:"
+                    int bangIndex = path.indexOf('!');
+                    if (bangIndex != -1) {
+                        path = path.substring(0, bangIndex);
+                    }
+                    return new File(new java.net.URI(path));
+                }
                 return new File(location.toURI());
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);

@@ -5,6 +5,8 @@
 package com.github.tatercertified.vanilla.config;
 
 import com.github.tatercertified.vanilla.Potatoptimize;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 
@@ -13,13 +15,19 @@ import dev.neuralnexus.taterapi.meta.MetaAPI;
 import dev.neuralnexus.taterapi.meta.enums.Platform;
 import dev.neuralnexus.taterapi.meta.platforms.TaterMetadata;
 
+import net.minecraft.SharedConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import org.spongepowered.asm.service.MixinService;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 

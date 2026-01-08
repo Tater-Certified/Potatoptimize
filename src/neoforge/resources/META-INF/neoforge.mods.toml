@@ -16,7 +16,7 @@ displayTest = "IGNORE_SERVER_VERSION"
 description = '''${description}'''
 
 [[mixins]]
-config = "${mod_id}.mixins.vanilla.json"
+config = "${mod_id}.vanilla.mixins.json"
 
 # NeoForge Dependency
 [[dependencies.${mod_id}]]
