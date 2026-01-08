@@ -94,7 +94,7 @@ unimined.minecraft {
     version(minecraftVersion)
     mappings {
         parchment(parchmentMinecraft, parchmentVersion)
-        mojmap()
+        mojmap();
     }
     defaultRemapJar = false
 }
@@ -173,6 +173,12 @@ tasks.assemble {
 tasks.shadowJar {
     dependsOn("relocateFabricJar")
 
+    // Relocate SLF4J to avoid LinkageError - loaders provide their own
+    relocate("org.slf4j", "com.github.tatercertified.shadow.slf4j")
+
+    // Exclude checkerframework - Sponge provides it
+    exclude("org/checkerframework/**")
+
     from(
         zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
         forge.output,
@@ -193,7 +199,7 @@ tasks.shadowJar {
                 "Implementation-Timestamp" to Instant.now().toString(),
                 "FMLCorePluginContainsFMLMod" to "true",
                 "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" to "$modId.mixins.vanilla.json"
+                "MixinConfigs" to "$modId.vanilla.mixins.json"
             )
         )
     }

@@ -21,8 +21,7 @@
     "experimental.tick_skipping.TickThresholdAccessor",
     "player.stats.PlayerEntityStatsMixin"
   ],
-  "client": [
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   },

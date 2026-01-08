@@ -92,13 +92,15 @@ public class PotatoptimizeConfig {
 
         config.applyModOverrides();
 
-        // Check dependencies several times, because one iteration may disable a rule required by
+        // Check dependencies several times, because one iteration may disable a rule
+        // required by
         // another rule
-        // This terminates because each additional iteration will disable one or more rules, and
+        // This terminates because each additional iteration will disable one or more
+        // rules, and
         // there is only a finite number of rules
-        //noinspection StatementWithEmptyBody
+        // noinspection StatementWithEmptyBody
         while (config.applyDependencies()) {
-            //noinspection UnnecessarySemicolon
+            // noinspection UnnecessarySemicolon
             ;
         }
 
@@ -226,6 +228,17 @@ public class PotatoptimizeConfig {
         if (codeSource != null) {
             URL location = codeSource.getLocation();
             try {
+                // handling nested JAR URI
+                String path = location.toString();
+                if (path.startsWith("jar:")) {
+                    // extrac the actual file path from jar:file:/path!/entry
+                    path = path.substring(4); // Remove "jar:"
+                    int bangIndex = path.indexOf('!');
+                    if (bangIndex != -1) {
+                        path = path.substring(0, bangIndex);
+                    }
+                    return new File(new java.net.URI(path));
+                }
                 return new File(location.toURI());
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
