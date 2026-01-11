@@ -183,7 +183,8 @@ public class PotatoptimizeConfig {
     }
 
     private void applyModOverrides() {
-        for (ModContainer<?> container : MetaAPI.instance().mods(MetaAPI.instance().platform())) {
+
+        for (ModContainer<?> container : MetaAPI.instance().mods(MixinConfig.platform.ref())) {
             Map<String, Boolean> overrides;
             if (container.platform().isFabric()) {
                 overrides = getOverridesFabric();

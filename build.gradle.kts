@@ -143,7 +143,7 @@ dependencies {
     mainCompileOnly(libs.mixin)
     mainCompileOnly(libs.mixinextras)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
-    implementation("com.github.Tater-Certified:MixinConstraints:4856759a06")
+    implementation("com.github.Tater-Certified:MixinConstraints:a6e72d7436")
     implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
     implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
     implementation("org.tomlj:tomlj:1.1.1")

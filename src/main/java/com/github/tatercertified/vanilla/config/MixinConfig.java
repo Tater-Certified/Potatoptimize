@@ -5,43 +5,34 @@
 package com.github.tatercertified.vanilla.config;
 
 import com.github.tatercertified.vanilla.Potatoptimize;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 
-import dev.neuralnexus.taterapi.meta.Constraint;
-import dev.neuralnexus.taterapi.meta.MetaAPI;
+import dev.neuralnexus.taterapi.meta.Platforms;
 import dev.neuralnexus.taterapi.meta.enums.Platform;
-import dev.neuralnexus.taterapi.meta.platforms.TaterMetadata;
 
-import net.minecraft.SharedConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import org.spongepowered.asm.service.MixinService;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
 public class MixinConfig implements IMixinConfigPlugin {
     private static String MIXIN_PACKAGE_ROOT;
+    public static Platform platform;
     private final Logger logger = LogManager.getLogger("PotatoptimizeConfig");
     private PotatoptimizeConfig config;
 
     @Override
     public void onLoad(String mixinPackage) {
         // Loader detection
-        detectLoader();
+        platform = Platforms.detectPrimary();
 
-        if (MetaAPI.instance().platform().isFabric()) {
+        if (platform.ref().isFabric()) {
             MIXIN_PACKAGE_ROOT = "com.github.tatercertified.y_intmdry.mixin.";
         } else {
             MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.mixin.";
@@ -143,18 +134,4 @@ public class MixinConfig implements IMixinConfigPlugin {
             ClassNode targetClass,
             String mixinClassName,
             IMixinInfo mixinInfo) {}
-
-    private void detectLoader() {
-        for (Platform platform :
-                Set.of(Platform.FABRIC, Platform.SPONGE, Platform.FORGE, Platform.NEOFORGE)) {
-            if (Constraint.builder().platform(platform.ref()).build().result()) {
-                switch (platform) {
-                    case FABRIC -> TaterMetadata.initFabric();
-                    case FORGE -> TaterMetadata.initForge();
-                    case NEOFORGE -> TaterMetadata.initNeoForge();
-                    default -> TaterMetadata.initSponge();
-                }
-            }
-        }
-    }
 }
