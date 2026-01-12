@@ -4,14 +4,14 @@
  */
 package com.github.tatercertified.vanilla.config;
 
+import com.github.tatercertified.vanilla.config.mixintree.MixinTree;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.datafixers.util.Pair;
 
 import dev.neuralnexus.taterapi.meta.*;
-
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,9 +33,12 @@ public class PotatoptimizeConfig {
     private static final Logger LOGGER = LogManager.getLogger("PotatoptimizeConfig");
 
     private static final String JSON_KEY_MOD_OPTIONS = "potatoptimize:options";
+    private static final String INTERNAL = "Potatoptimize";
+    private static final String USER = "User";
 
-    private final Map<String, Option> options = new HashMap<>();
-    private final Set<Option> optionsWithDependencies = new ObjectLinkedOpenHashSet<>();
+    private static final List<Pair<String[], Pair<String, Boolean>>> mixinOverrides =
+            new ArrayList<>();
+    public MixinTree tree;
 
     private PotatoptimizeConfig() {
         // Defines the default rules which can be configured by the user or other mods.
@@ -52,8 +55,12 @@ public class PotatoptimizeConfig {
                 properties.load(propertiesReader);
                 properties.forEach(
                         (ruleName, enabled) ->
-                                this.addMixinRule(
-                                        (String) ruleName, Boolean.parseBoolean((String) enabled)));
+                                mixinOverrides.add(
+                                        new Pair<>(
+                                                slice((String) ruleName),
+                                                new Pair<>(
+                                                        INTERNAL,
+                                                        Boolean.parseBoolean((String) enabled)))));
             } catch (IOException e) {
                 LOGGER.error("Potatoptimize mixin config default properties could not be read!", e);
                 throw new IllegalStateException(
@@ -71,6 +78,7 @@ public class PotatoptimizeConfig {
      */
     public static PotatoptimizeConfig load(File file) {
         PotatoptimizeConfig config = new PotatoptimizeConfig();
+        config.applyModOverrides();
 
         if (file.exists()) {
             Properties props = new Properties();
@@ -90,79 +98,15 @@ public class PotatoptimizeConfig {
             }
         }
 
-        config.applyModOverrides();
-
-        // Check dependencies several times, because one iteration may disable a rule required by
-        // another rule
-        // This terminates because each additional iteration will disable one or more rules, and
-        // there is only a finite number of rules
-        //noinspection StatementWithEmptyBody
-        while (config.applyDependencies()) {
-            //noinspection UnnecessarySemicolon
-            ;
-        }
-
+        // Generate Mixin Tree
+        config.tree = new MixinTree(mixinOverrides);
         return config;
-    }
-
-    /**
-     * Defines a dependency between two registered mixin rules. If a dependency is not satisfied,
-     * the mixin will be disabled.
-     *
-     * @param rule the mixin rule that requires another rule to be set to a given value
-     * @param dependency the mixin rule the given rule depends on
-     * @param requiredValue the required value of the dependency
-     */
-    @SuppressWarnings("SameParameterValue")
-    private void addRuleDependency(String rule, String dependency, boolean requiredValue) {
-        Option option = this.options.get(rule);
-        if (option == null) {
-            LOGGER.error(
-                    "Option {} for dependency '{} depends on {}={}' not found. Skipping.",
-                    rule,
-                    rule,
-                    dependency,
-                    requiredValue);
-            return;
-        }
-        Option dependencyOption = this.options.get(dependency);
-        if (dependencyOption == null) {
-            LOGGER.error(
-                    "Option {} for dependency '{} depends on {}={}' not found. Skipping.",
-                    dependency,
-                    rule,
-                    dependency,
-                    requiredValue);
-            return;
-        }
-        option.addDependency(dependencyOption, requiredValue);
-        this.optionsWithDependencies.add(option);
-    }
-
-    /**
-     * Defines a Mixin rule which can be configured by users and other mods.
-     *
-     * @param mixin The name of the mixin package which will be controlled by this rule
-     * @param enabled True if the rule will be enabled by default, otherwise false
-     * @throws IllegalStateException If a rule with that name already exists
-     */
-    private void addMixinRule(String mixin, boolean enabled) {
-        if (this.options.putIfAbsent(mixin, new Option(mixin, enabled, false)) != null) {
-            throw new IllegalStateException("Mixin rule already defined: " + mixin);
-        }
     }
 
     private void readProperties(Properties props) {
         for (Map.Entry<Object, Object> entry : props.entrySet()) {
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
-
-            Option option = this.options.get(key);
-
-            if (option == null) {
-                LOGGER.warn("No configuration key exists with name '{}', ignoring", key);
-                continue;
-            }
 
             boolean enabled;
 
@@ -178,7 +122,7 @@ public class PotatoptimizeConfig {
                 continue;
             }
 
-            option.setEnabled(enabled, true);
+            mixinOverrides.add(new Pair<>(slice(key), new Pair<>(USER, enabled)));
         }
     }
 
@@ -197,7 +141,18 @@ public class PotatoptimizeConfig {
             }
 
             for (Map.Entry<String, Boolean> override : overrides.entrySet()) {
-                applyModOverride(container.info(), override.getKey(), override.getValue());
+                if (override.getValue() == null) {
+                    LOGGER.warn(
+                            "Mod '{}' attempted to override option '{}' with an invalid value, ignoring",
+                            container.id(),
+                            override.getKey());
+                    continue;
+                }
+
+                mixinOverrides.add(
+                        new Pair<>(
+                                slice(override.getKey()),
+                                new Pair<>(container.name(), override.getValue())));
             }
         }
     }
@@ -318,82 +273,6 @@ public class PotatoptimizeConfig {
         }
     }
 
-    private void applyModOverride(ModInfo meta, String name, Boolean value) {
-        if (!name.startsWith("mixin.")) {
-            name = getMixinRuleName(name);
-        }
-        Option option = this.options.get(name);
-
-        if (option == null) {
-            LOGGER.warn(
-                    "Mod '{}' attempted to override option '{}', which doesn't exist, ignoring",
-                    meta.id(),
-                    name);
-            return;
-        }
-
-        if (value == null) {
-            LOGGER.warn(
-                    "Mod '{}' attempted to override option '{}' with an invalid value, ignoring",
-                    meta.id(),
-                    name);
-            return;
-        }
-
-        // disabling the option takes precedence over enabling
-        if (!value && option.isEnabled()) {
-            option.clearModsDefiningValue();
-        }
-
-        if (!value || option.isEnabled() || option.getDefiningMods().isEmpty()) {
-            option.addModOverride(value, meta.id());
-        }
-    }
-
-    /**
-     * Returns the effective option for the specified class name. This traverses the package path of
-     * the given mixin and checks each root for configuration rules. If a configuration rule
-     * disables a package, all mixins located in that package and its children will be disabled. The
-     * effective option is that of the highest-priority rule, either a enable rule at the end of the
-     * chain or a disable rule at the earliest point in the chain.
-     *
-     * @return Null if no options matched the given mixin name, otherwise the effective option for
-     *     this Mixin
-     */
-    public Option getEffectiveOptionForMixin(String mixinClassName) {
-        int lastSplit = 0;
-        int nextSplit;
-
-        Option rule = null;
-
-        while ((nextSplit = mixinClassName.indexOf('.', lastSplit)) != -1) {
-            String key = getMixinRuleName(mixinClassName.substring(0, nextSplit));
-
-            Option candidate = this.options.get(key);
-
-            if (candidate != null) {
-                rule = candidate;
-
-                if (!rule.isEnabled()) {
-                    return rule;
-                }
-            }
-
-            lastSplit = nextSplit + 1;
-        }
-
-        return rule;
-    }
-
-    /** Tests all dependencies and disables options when their dependencies are not met. */
-    private boolean applyDependencies() {
-        boolean changed = false;
-        for (Option optionWithDependency : this.optionsWithDependencies) {
-            changed |= optionWithDependency.disableIfDependenciesNotMet(LOGGER, this);
-        }
-        return changed;
-    }
-
     private static void writeDefaultConfig(File file) throws IOException {
         File dir = file.getParentFile();
 
@@ -421,26 +300,7 @@ public class PotatoptimizeConfig {
         }
     }
 
-    private static String getMixinRuleName(String name) {
-        return "mixin." + name;
-    }
-
-    public int getOptionCount() {
-        return this.options.size();
-    }
-
-    public int getOptionOverrideCount() {
-        return (int) this.options.values().stream().filter(Option::isOverridden).count();
-    }
-
-    public Option getParent(Option option) {
-        String optionName = option.getName();
-        int split;
-
-        if ((split = optionName.lastIndexOf('.')) != -1) {
-            String key = optionName.substring(0, split);
-            return this.options.get(key);
-        }
-        return null;
+    public static String[] slice(String string) {
+        return string.split("\\.");
     }
 }

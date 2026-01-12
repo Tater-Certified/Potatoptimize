@@ -5,6 +5,7 @@
 package com.github.tatercertified.vanilla.config;
 
 import com.github.tatercertified.vanilla.Potatoptimize;
+import com.github.tatercertified.vanilla.config.mixintree.NodeData;
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 
@@ -33,9 +34,9 @@ public class MixinConfig implements IMixinConfigPlugin {
         platform = Platforms.detectPrimary();
 
         if (platform.ref().isFabric()) {
-            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.y_intmdry.mixin.";
+            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.y_intmdry.";
         } else {
-            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.mixin.";
+            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.";
         }
 
         MixinConstraintsBootstrap.init(mixinPackage);
@@ -47,9 +48,8 @@ public class MixinConfig implements IMixinConfigPlugin {
         }
 
         this.logger.info(
-                "Loaded configuration file for Potatoptimize: {} options available, {} override(s) found",
-                this.config.getOptionCount(),
-                this.config.getOptionOverrideCount());
+                "Loaded optimizations overrides for Potatoptimize: {} override(s) found",
+                this.config.tree.getOverrides());
 
         Potatoptimize.CONFIG = this.config;
     }
@@ -72,36 +72,28 @@ public class MixinConfig implements IMixinConfigPlugin {
         }
 
         String mixin = mixinClassName.substring(MIXIN_PACKAGE_ROOT.length());
-        Option option = this.config.getEffectiveOptionForMixin(mixin);
+        NodeData data = this.config.tree.isEnabled(mixin);
 
-        if (option == null) {
-            this.logger.error(
-                    "No rules matched mixin '{}', treating as foreign and disabling!", mixin);
+        String source;
 
-            return false;
+        if (data.source() == null) {
+            // Not overridden
+            return MixinConstraints.shouldApplyMixin(targetClassName, mixinClassName);
+        } else {
+            source = data.source();
         }
 
-        if (option.isOverridden()) {
-            String source = "[unknown]";
-
-            if (option.isUserDefined()) {
-                source = "user configuration";
-            } else if (option.isModDefined()) {
-                source = "mods [" + String.join(", ", option.getDefiningMods()) + "]";
-            }
-
-            if (option.isEnabled()) {
-                this.logger.warn(
-                        "Force-enabling mixin '{}' as rule '{}' (added by {}) enables it",
-                        mixin,
-                        option.getName(),
-                        source);
+        if (data.isUser()) {
+            if (data.enabled()) {
+                this.logger.warn("Force-enabling mixin '{}' as the user enables it", mixin);
             } else {
-                this.logger.warn(
-                        "Force-disabling mixin '{}' as rule '{}' (added by {}) disables it and children",
-                        mixin,
-                        option.getName(),
-                        source);
+                this.logger.warn("Force-disabling mixin '{}' as the user disables it", mixin);
+            }
+        } else {
+            if (data.enabled()) {
+                this.logger.warn("Force-enabling mixin '{}' as '{}' enables it", mixin, source);
+            } else {
+                this.logger.warn("Force-disabling mixin '{}' as '{}' disables it", mixin, source);
             }
         }
 
@@ -110,7 +102,7 @@ public class MixinConfig implements IMixinConfigPlugin {
             return false;
         }
 
-        return option.isEnabled();
+        return data.enabled();
     }
 
     @Override
