@@ -2,7 +2,7 @@
  * Copyright (c) 2025 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin.vanilla.entity.navigation;
+package com.github.tatercertified.vanilla.mixin.semivanilla.entity.navigation;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
