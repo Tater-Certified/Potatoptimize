@@ -15,7 +15,7 @@
     "vanilla.entity.halloween.IsHalloweenMixin",
     "vanilla.entity.halloween.SkeletonEntityMixin",
     "vanilla.entity.halloween.ZombieEntityMixin",
-    "vanilla.entity.navigation.CancelNavigationMixin",
+    "semivanilla.entity.navigation.CancelNavigationMixin",
     "vanilla.entity.spawning.slime.RandomSlimeEntityMixin",
     "vanilla.entity.spawning.slime.SlimeChunkMixin",
     "nonvanilla.entity.teleport.portal.NetherPortalMixin",

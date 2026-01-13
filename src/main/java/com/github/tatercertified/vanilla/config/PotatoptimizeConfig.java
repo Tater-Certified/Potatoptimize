@@ -36,8 +36,7 @@ public class PotatoptimizeConfig {
     private static final String INTERNAL = "Potatoptimize";
     private static final String USER = "User";
 
-    private final List<Pair<String[], Pair<String, Boolean>>> mixinOverrides =
-            new ArrayList<>();
+    private final List<Pair<String[], Pair<String, Boolean>>> mixinOverrides = new ArrayList<>();
     public MixinTree tree;
 
     private PotatoptimizeConfig() {
