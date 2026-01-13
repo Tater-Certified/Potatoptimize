@@ -51,7 +51,7 @@ public class MixinConfig implements IMixinConfigPlugin {
                 "Loaded optimizations overrides for Potatoptimize: {} override(s) found",
                 this.config.tree.getOverrides());
 
-        Potatoptimize.CONFIG = this.config;
+        Potatoptimize.configLoaded = true;
     }
 
     @Override

@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class MixinTreeNode {
     private NodeData data;
-    private static final NodeData MISSING_NODE = new NodeData(null, true);
     private final Map<String, MixinTreeNode> children = new HashMap<>();
 
     public void setEnabled(boolean enabled, String mod) {
@@ -58,7 +57,7 @@ public class MixinTreeNode {
             MixinTreeNode nextNode = children.get(currentPart);
             if (nextNode == null) {
                 // If the node doesn't exist, then it is assumed on
-                return MISSING_NODE;
+                return new NodeData(null, true);
             } else {
                 return nextNode.isEnabled(packageParts, index + 1);
             }
