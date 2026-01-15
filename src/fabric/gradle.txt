@@ -1,0 +1,1 @@
+modConfig=fabric.mod.json

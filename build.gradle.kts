@@ -1,6 +1,24 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.tatercertified.MCBuildConfig
+import com.github.tatercertified.MultiMCExtension
+import com.github.tatercertified.utils.DependencyBuilder
+import com.github.tatercertified.utils.MCGradleBuilder
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
+import java.nio.file.Paths
 import java.time.Instant
+import java.util.HashMap
+
+buildscript {
+    repositories {
+        maven {
+            setUrl("https://jitpack.io")
+        }
+    }
+    dependencies {
+        classpath("com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.14")
+    }
+}
+
 
 plugins {
     id("java")
@@ -10,6 +28,10 @@ plugins {
     id("xyz.wagyourtail.unimined") version "8e64092954"
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
+}
+
+apply {
+    plugin("com.github.tatercertified.multimc")
 }
 
 base {
@@ -207,3 +229,43 @@ tasks.shadowJar {
     }
 }
 tasks.build.get().dependsOn("spotlessApply")
+
+configure<MultiMCExtension> {
+    currentMinecraftVer = "1.21.11"
+    isFutureCompatible = true
+
+    // Path where jars should be placed
+    outputDir = Paths.get("outputFolder")
+
+    // If your project only uses one gradle.properties file (default: true)
+    isUnifiedGradlePropsFile = true
+
+    // The name of a variable in gradle.properties
+    modConfigFileRelativePath = "modConfig"
+
+    // The loader name and where the subproject directory is located
+    loaderSpecificPaths = mapOf(
+        "fabric" to Paths.get("src/fabric"),
+        "neoforge" to Paths.get("src/neoforge"),
+        "forge" to Paths.get("src/forge"),
+        "sponge" to Paths.get("src/sponge"),
+    ) as HashMap<String?, java.nio.file.Path?>?
+
+    // The paths to the common code subprojects (default: None)
+    commonDirs = arrayOf(
+        Paths.get("src/main"),
+    )
+
+    // Specifies how to handle gradle properties between versions
+    gradleConfig = MCBuildConfig { builder: MCGradleBuilder ->
+        builder.mcVer("1.21.11") { depBuilder: DependencyBuilder ->
+            depBuilder.dep("minecraft_version", "1.21.11")
+                .dep("parchment_minecraft", "1.21.11")
+                .dep("parchment_version", "2025.12.20")
+                .dep("forge_version", "61.0.3")
+                .dep("neoforge_version", "13-beta")
+                .dep("sponge_version", "18.0.0-SNAPSHOT")
+        }
+    }
+}
+
