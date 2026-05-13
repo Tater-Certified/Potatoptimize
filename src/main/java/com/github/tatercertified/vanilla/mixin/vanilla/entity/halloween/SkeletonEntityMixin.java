@@ -1,11 +1,10 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.mixin.vanilla.entity.halloween;
 
 import com.github.tatercertified.vanilla.utils.interfaces.HalloweenInterface;
-
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,12 +33,12 @@ public abstract class SkeletonEntityMixin extends Monster {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z"),
             cancellable = true)
     private void optimizedCheckHalloween(
-            ServerLevelAccessor world,
+            ServerLevelAccessor level,
             DifficultyInstance difficulty,
             EntitySpawnReason spawnReason,
-            SpawnGroupData entityData,
+            SpawnGroupData groupData,
             CallbackInfoReturnable<SpawnGroupData> cir) {
-        if (((HalloweenInterface) world.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
+        if (((HalloweenInterface) level.getServer()).isHalloween() && random.nextFloat() < 0.25f) {
             this.setItemSlot(
                     EquipmentSlot.HEAD,
                     new ItemStack(
@@ -49,6 +47,6 @@ public abstract class SkeletonEntityMixin extends Monster {
                                     : Blocks.CARVED_PUMPKIN));
             this.setDropChance(EquipmentSlot.HEAD, 0.0F);
         }
-        cir.setReturnValue(entityData);
+        cir.setReturnValue(groupData);
     }
 }

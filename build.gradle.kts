@@ -1,37 +1,13 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.tatercertified.MCBuildConfig
-import com.github.tatercertified.MultiMCExtension
-import com.github.tatercertified.utils.DependencyBuilder
-import com.github.tatercertified.utils.MCGradleBuilder
-import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-import java.nio.file.Paths
 import java.time.Instant
-import java.util.HashMap
-
-buildscript {
-    repositories {
-        maven {
-            setUrl("https://jitpack.io")
-        }
-    }
-    dependencies {
-        classpath("com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.14")
-    }
-}
-
 
 plugins {
     id("java")
     id("maven-publish")
     id("idea")
     id("eclipse")
-    id("xyz.wagyourtail.unimined") version "8e64092954"
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
-}
-
-apply {
-    plugin("com.github.tatercertified.multimc")
+    alias(libs.plugins.unimined)
 }
 
 base {
@@ -55,16 +31,12 @@ spotless {
         importOrder()
         removeUnusedImports()
         cleanthat()
-        googleJavaFormat("1.24.0")
-            .aosp()
-            .formatJavadoc(true)
-            .reorderImports(true)
         formatAnnotations()
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         licenseHeader("""/**
- * Copyright (c) 2025 $author
+ * Copyright (c) 2026 $author
  * This project is Licensed under <a href="$sourceUrl/blob/main/LICENSE">$license</a>
  */""")
     }
@@ -85,20 +57,9 @@ val neoforgeCompileOnly: Configuration by configurations.getting
 val spongeCompileOnly: Configuration by configurations.getting {
     extendsFrom(mainCompileOnly)
 }
-val modImplementation: Configuration by configurations.creating
-val fabricModImplementation: Configuration by configurations.creating {
-    extendsFrom(modImplementation)
-}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-}
-
-tasks.withType<RemapJarTask> {
-    mixinRemap {
-        enableBaseMixin()
-        disableRefmap()
-    }
 }
 
 repositories {
@@ -106,57 +67,38 @@ repositories {
     unimined.fabricMaven()
     unimined.minecraftForgeMaven()
     unimined.neoForgedMaven()
-    unimined.parchmentMaven()
     unimined.spongeMaven()
-    maven("https://jitpack.io")
+    maven("https://maven.neuralnexus.dev/releases")
     maven("https://maven.neuralnexus.dev/snapshots")
 }
 
 unimined.minecraft {
     version(minecraftVersion)
-    mappings {
-        parchment(parchmentMinecraft, parchmentVersion)
-        mojmap()
-    }
     defaultRemapJar = false
 }
 
 unimined.minecraft(fabric) {
     combineWith(sourceSets.main.get())
-    fabric {
-        loader(fabricLoaderVersion)
-    }
-    defaultRemapJar = true
-}
-
-tasks.register<ShadowJar>("relocateFabricJar") {
-    dependsOn("remapFabricJar")
-    from(zipTree(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile))
-    archiveClassifier.set("fabric-relocated")
-    relocate("com.github.tatercertified.vanilla", "com.github.tatercertified.y_intmdry")
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(forge) {
     combineWith(sourceSets.main.get())
-    minecraftForge {
-        loader(forgeVersion)
-        mixinConfig("$modId.vanilla.mixins.json")
-    }
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(neoforge) {
     combineWith(sourceSets.main.get())
-    neoForge {
-        loader(neoForgeVersion)
-        mixinConfig("$modId.vanilla.mixins.json")
-    }
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(sponge) {
     combineWith(sourceSets.main.get())
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 dependencies {
@@ -165,49 +107,37 @@ dependencies {
     mainCompileOnly(libs.mixin)
     mainCompileOnly(libs.mixinextras)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
-    implementation("com.github.Tater-Certified:MixinConstraints:a6e72d7436")
     implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
     implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
     implementation("org.tomlj:tomlj:1.1.1")
+    implementation("com.moulberry:mixinconstraints:1.0.8")
 }
 
 tasks.withType<ProcessResources> {
     filesMatching(listOf(
         "fabric.mod.json",
         "pack.mcmeta",
-        "assets/potatoptimize/potatoptimize-mixin-config-default.properties",
         "META-INF/mods.toml",
         "META-INF/neoforge.mods.toml",
-        "plugin.yml",
         "META-INF/sponge_plugins.json",
+        "assets/potatoptimize/potatoptimize-mixin-config-default.properties",
     )) {
         expand(project.properties)
     }
 }
 
-tasks.jar {
-    enabled = false
-}
-
-tasks.assemble {
-    dependsOn(tasks.shadowJar)
-}
-
 tasks.shadowJar {
-    dependsOn("relocateFabricJar")
-
-    relocate("org.slf4j", "com.github.tatercertified.shadow.slf4j")
-    exclude("org/checkerframework/**")
+    archiveClassifier.set("")
 
     from(
-        zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
+        fabric.output,
         forge.output,
         neoforge.output,
         sponge.output,
     )
 
-
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes(
             mapOf(
@@ -219,7 +149,7 @@ tasks.shadowJar {
                 "Implementation-Timestamp" to Instant.now().toString(),
                 "FMLCorePluginContainsFMLMod" to "true",
                 "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" to "$modId.vanilla.mixins.json"
+                "MixinConfigs" to "$modId.mixins.vanilla.json"
             )
         )
     }
@@ -228,44 +158,7 @@ tasks.shadowJar {
         into("META-INF")
     }
 }
-tasks.build.get().dependsOn("spotlessApply")
 
-configure<MultiMCExtension> {
-    currentMinecraftVer = "1.21.11"
-    isFutureCompatible = true
-
-    // Path where jars should be placed
-    outputDir = Paths.get("outputFolder")
-
-    // If your project only uses one gradle.properties file (default: true)
-    isUnifiedGradlePropsFile = true
-
-    // The name of a variable in gradle.properties
-    modConfigFileRelativePath = "modConfig"
-
-    // The loader name and where the subproject directory is located
-    loaderSpecificPaths = mapOf(
-        "fabric" to Paths.get("src/fabric"),
-        "neoforge" to Paths.get("src/neoforge"),
-        "forge" to Paths.get("src/forge"),
-        "sponge" to Paths.get("src/sponge"),
-    ) as HashMap<String?, java.nio.file.Path?>?
-
-    // The paths to the common code subprojects (default: None)
-    commonDirs = arrayOf(
-        Paths.get("src/main"),
-    )
-
-    // Specifies how to handle gradle properties between versions
-    gradleConfig = MCBuildConfig { builder: MCGradleBuilder ->
-        builder.mcVer("1.21.11") { depBuilder: DependencyBuilder ->
-            depBuilder.dep("minecraft_version", "1.21.11")
-                .dep("parchment_minecraft", "1.21.11")
-                .dep("parchment_version", "2025.12.20")
-                .dep("forge_version", "61.0.3")
-                .dep("neoforge_version", "13-beta")
-                .dep("sponge_version", "18.0.0-SNAPSHOT")
-        }
-    }
+tasks.jar {
+    enabled = false
 }
-

@@ -1,31 +1,29 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.mixin.vanilla.entity.halloween;
 
 import com.github.tatercertified.vanilla.utils.interfaces.HalloweenInterface;
 import com.mojang.datafixers.DataFixer;
-
+import java.net.Proxy;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.Services;
 import net.minecraft.server.WorldStem;
 import net.minecraft.server.level.progress.LevelLoadListener;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.world.level.storage.LevelStorageSource;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.net.Proxy;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.temporal.ChronoUnit;
 
 /**
  * This optimization only checks for Halloween once when the server starts and stores this value for
@@ -57,15 +55,7 @@ public abstract class IsHalloweenMixin implements HalloweenInterface {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void prepareHalloweenCheck(
-            Thread thread,
-            LevelStorageSource.LevelStorageAccess levelStorageAccess,
-            PackRepository packRepository,
-            WorldStem worldStem,
-            Proxy proxy,
-            DataFixer dataFixer,
-            Services services,
-            LevelLoadListener levelLoadListener,
-            CallbackInfo ci) {
+            Thread serverThread, LevelStorageSource.LevelStorageAccess storageSource, PackRepository packRepository, WorldStem worldStem, Optional gameRules, Proxy proxy, DataFixer fixerUpper, Services services, LevelLoadListener levelLoadListener, boolean propagatesCrashes, CallbackInfo ci) {
         this.runHalloweenTests();
     }
 

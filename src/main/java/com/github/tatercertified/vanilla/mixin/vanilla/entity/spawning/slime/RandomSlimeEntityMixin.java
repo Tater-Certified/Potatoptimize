@@ -1,11 +1,10 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.mixin.vanilla.entity.spawning.slime;
 
 import com.github.tatercertified.vanilla.utils.interfaces.SlimeChunkInterface;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.chunk.LevelChunk;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -43,24 +41,24 @@ public abstract class RandomSlimeEntityMixin extends Mob implements Enemy {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/world/level/ChunkPos;<init>(Lnet/minecraft/core/BlockPos;)V"),
+                                    "Lnet/minecraft/world/level/ChunkPos;containing(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/ChunkPos;"),
             cancellable = true)
     private static void simplifySlimeChunkCheck(
             EntityType<Slime> type,
-            LevelAccessor world,
-            EntitySpawnReason entitySpawnReason,
+            LevelAccessor level,
+            EntitySpawnReason spawnReason,
             BlockPos pos,
             RandomSource random,
             CallbackInfoReturnable<Boolean> cir) {
         if (pos.getY() < 40 && random.nextInt(10) == 0) {
-            LevelChunk chunk = (LevelChunk) world.getChunk(pos);
+            LevelChunk chunk = (LevelChunk) level.getChunk(pos);
             if (((SlimeChunkInterface) chunk).isSlimeChunk()) {
-                cir.setReturnValue(canSlimeSpawn(pos, world, type));
+                cir.setReturnValue(canSlimeSpawn(pos, level, type));
                 return;
             }
         }
 
-        // Cancels vanilla logic afterwards
+        // Cancels vanilla logic afterward
         cir.setReturnValue(false);
     }
 

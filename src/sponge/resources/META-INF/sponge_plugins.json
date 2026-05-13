@@ -7,7 +7,6 @@
   "plugins": [
     {
       "id": "${mod_id}",
-      "entrypoint": "com.github.tatercertified.sponge.PotatoptimizeSponge",
       "name": "${mod_name}",
       "description": "${description}",
       "version": "${version}",

@@ -1,11 +1,10 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.mixin.vanilla.entity.spawning.slime;
 
 import com.github.tatercertified.vanilla.utils.interfaces.SlimeChunkInterface;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.blending.BlendingData;
 import net.minecraft.world.ticks.LevelChunkTicks;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,8 +31,8 @@ public class SlimeChunkMixin implements SlimeChunkInterface {
             method =
                     "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ChunkPos;)V",
             at = @At("TAIL"))
-    private void assignSlimeChunk1(Level world, ChunkPos pos, CallbackInfo ci) {
-        setSlimeChunk(world, pos);
+    private void assignSlimeChunk1(Level level, ChunkPos pos, CallbackInfo ci) {
+        setSlimeChunk(level, pos);
     }
 
     @Inject(
@@ -42,11 +40,11 @@ public class SlimeChunkMixin implements SlimeChunkInterface {
                     "<init>(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/chunk/ProtoChunk;Lnet/minecraft/world/level/chunk/LevelChunk$PostLoadProcessor;)V",
             at = @At("TAIL"))
     private void assignSlimeChunk2(
-            ServerLevel world,
+            ServerLevel level,
             ProtoChunk protoChunk,
-            LevelChunk.PostLoadProcessor entityLoader,
+            LevelChunk.PostLoadProcessor postLoad,
             CallbackInfo ci) {
-        setSlimeChunk(world, protoChunk.getPos());
+        setSlimeChunk(level, protoChunk.getPos());
     }
 
     @Inject(
@@ -54,17 +52,17 @@ public class SlimeChunkMixin implements SlimeChunkInterface {
                     "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/ticks/LevelChunkTicks;Lnet/minecraft/world/ticks/LevelChunkTicks;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/chunk/LevelChunk$PostLoadProcessor;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V",
             at = @At("TAIL"))
     private void assignSlimeChunk3(
-            Level world,
+            Level level,
             ChunkPos pos,
             UpgradeData upgradeData,
-            LevelChunkTicks blockTickScheduler,
-            LevelChunkTicks fluidTickScheduler,
+            LevelChunkTicks blockTicks,
+            LevelChunkTicks fluidTicks,
             long inhabitedTime,
-            LevelChunkSection[] sectionArrayInitializer,
-            LevelChunk.PostLoadProcessor entityLoader,
+            LevelChunkSection[] sections,
+            LevelChunk.PostLoadProcessor postLoad,
             BlendingData blendingData,
             CallbackInfo ci) {
-        setSlimeChunk(world, pos);
+        setSlimeChunk(level, pos);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class SlimeChunkMixin implements SlimeChunkInterface {
     private void setSlimeChunk(Level world, ChunkPos pos) {
         if (world instanceof WorldGenLevel genLevel) {
             RandomSource random =
-                    WorldgenRandom.seedSlimeChunk(pos.x, pos.z, genLevel.getSeed(), 987234911L);
+                    WorldgenRandom.seedSlimeChunk(pos.x(), pos.z(), genLevel.getSeed(), 987234911L);
             slimeChunk = random.nextInt(10) == 0;
         } else {
             slimeChunk = false;

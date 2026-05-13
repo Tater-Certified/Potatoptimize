@@ -13,15 +13,8 @@
   "license": "${license}",
   "icon": "icon.png",
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      "com.github.tatercertified.fabric.PotatoptimizeFabric"
-    ],
-    "client": [],
-    "server": []
-  },
   "mixins": [
-    "potatoptimize.mixins.fabric.json"
+    "potatoptimize.vanilla.mixins.json"
   ],
   "depends": {
     "fabricloader": "*",

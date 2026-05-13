@@ -1,13 +1,15 @@
 [versions]
-spotless = "8.1.0"
-shadow = "9.3.1"
+spotless = "8.4.0"
+shadow = "9.4.1"
+unimined = "1.4.2-SNAPSHOT"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
-mixin = { group = "org.spongepowered", name = "mixin", version = "0.8.5-SNAPSHOT" }
-mixinextras = { group = "io.github.llamalad7", name = "mixinextras-common", version = "0.5.2"}
-asm = { group = "org.ow2.asm", name = "asm-tree", version = "9.9.1"}
+mixin = { group = "org.spongepowered", name = "mixin", version = "0.8.7-SNAPSHOT" }
+mixinextras = { group = "io.github.llamalad7", name = "mixinextras-common", version = "0.5.4"}
+asm = { group = "org.ow2.asm", name = "asm-tree", version = "9.7.1"}
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+unimined = { id = "xyz.wagyourtail.unimined", version.ref = "unimined" }
