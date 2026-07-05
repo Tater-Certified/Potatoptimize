@@ -4,6 +4,7 @@
  */
 package com.github.tatercertified.vanilla.mixin.vanilla.entity.halloween;
 
+import java.time.LocalTime;
 import java.time.MonthDay;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,6 +14,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SpecialDates.class)
 public class SpecialDatesMixin {
@@ -28,7 +32,6 @@ public class SpecialDatesMixin {
     private static long nextHalloweenEnd;
     private static long nextChristmasStart;
     private static long nextChristmasEnd;
-    private static final long MS_IN_DAY = 86400000;
 
     /**
      * @author QPCrummer
@@ -64,17 +67,61 @@ public class SpecialDatesMixin {
         return isCurrentlyChristmas;
     }
 
+    @Inject(method = "<clinit>", at = @At("HEAD"))
+    private static void potatoptimize$initCache(CallbackInfo ci) {
+        ZonedDateTime now = ZonedDateTime.now();
+
+        // Init Halloween cache
+        if (isBefore(now, HALLOWEEN)) {
+            nextHalloweenStart = getTimeStamp(now.getYear(), HALLOWEEN, true);
+            nextHalloweenEnd = getTimeStamp(now.getYear(), HALLOWEEN, false);
+            isCurrentlyHalloween = false;
+        } else if (isDuring(now, HALLOWEEN, 0)){
+            nextHalloweenStart = getTimeStamp(now.getYear(), HALLOWEEN, true);
+            nextHalloweenEnd = getTimeStamp(now.getYear(), HALLOWEEN, false);
+        } else {
+            updateHalloweenCache();
+        }
+
+        // Init Christmas cache
+        if (isBefore(now, CHRISTMAS_RANGE.getFirst())) {
+            nextChristmasStart = getTimeStamp(now.getYear(), CHRISTMAS_RANGE.getFirst(), true);
+            nextChristmasEnd = getTimeStamp(now.getYear(), CHRISTMAS_RANGE.getLast(), false);
+            isCurrentlyChristmas = false;
+        } else if (isDuring(now, CHRISTMAS_RANGE.getFirst(), CHRISTMAS_RANGE.size() - 1)) {
+            nextChristmasStart = getTimeStamp(now.getYear(), CHRISTMAS_RANGE.getFirst(), true);
+            nextChristmasEnd = getTimeStamp(now.getYear(), CHRISTMAS_RANGE.getLast(), false);
+        } else {
+            updateChristmasCache();
+        }
+    }
+
     private static void updateHalloweenCache() {
         int nextYear = ZonedDateTime.now().getYear() + 1;
-        nextHalloweenStart = HALLOWEEN.atYear(nextYear).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        nextHalloweenEnd = nextHalloweenStart + MS_IN_DAY;
+        nextHalloweenStart = getTimeStamp(nextYear, HALLOWEEN, true);
+        nextHalloweenEnd = getTimeStamp(nextYear, HALLOWEEN, false);
         isCurrentlyHalloween = false;
     }
 
     private static void updateChristmasCache() {
         int nextYear = ZonedDateTime.now().getYear() + 1;
-        nextChristmasStart = CHRISTMAS_RANGE.getFirst().atYear(nextYear).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        nextChristmasEnd = nextChristmasStart + MS_IN_DAY * CHRISTMAS_RANGE.size();
+        nextChristmasStart = getTimeStamp(nextYear, CHRISTMAS_RANGE.getFirst(), true);
+        nextChristmasEnd = getTimeStamp(nextYear, CHRISTMAS_RANGE.getLast(), false);
         isCurrentlyChristmas = false;
+    }
+
+    private static boolean isBefore(ZonedDateTime currentTime, MonthDay checkingAgainst) {
+        return currentTime.getDayOfYear() < checkingAgainst.atYear(currentTime.getYear()).getDayOfYear();
+    }
+
+    private static boolean isDuring(ZonedDateTime currentTime, MonthDay checkingAgainstFirstDay, int eventAdditionalDays) {
+        int eventFirstDay = checkingAgainstFirstDay.atYear(currentTime.getYear()).getDayOfYear();
+        int eventLastDay = eventFirstDay + eventAdditionalDays;
+        int currentDay = currentTime.getDayOfYear();
+        return currentDay >= eventFirstDay && currentDay <= eventLastDay;
+    }
+
+    private static long getTimeStamp(int referenceYear, MonthDay day, boolean startOfDay) {
+        return startOfDay ? day.atYear(referenceYear).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() : day.atYear(referenceYear).atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 }
