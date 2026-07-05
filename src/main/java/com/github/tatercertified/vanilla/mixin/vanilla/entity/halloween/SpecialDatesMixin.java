@@ -67,7 +67,7 @@ public class SpecialDatesMixin {
         return isCurrentlyChristmas;
     }
 
-    @Inject(method = "<clinit>", at = @At("HEAD"))
+    @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void potatoptimize$initCache(CallbackInfo ci) {
         ZonedDateTime now = ZonedDateTime.now();
 
