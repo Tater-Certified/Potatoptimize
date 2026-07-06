@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.config;
@@ -10,16 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
-
 import dev.neuralnexus.taterapi.meta.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.tomlj.Toml;
-import org.tomlj.TomlArray;
-import org.tomlj.TomlParseResult;
-
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
@@ -28,6 +19,12 @@ import java.security.CodeSource;
 import java.util.*;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.tomlj.Toml;
+import org.tomlj.TomlArray;
+import org.tomlj.TomlParseResult;
 
 public class PotatoptimizeConfig {
     private static final Logger LOGGER = LogManager.getLogger("PotatoptimizeConfig");

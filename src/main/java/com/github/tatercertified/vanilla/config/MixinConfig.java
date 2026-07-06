@@ -1,29 +1,25 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.config;
 
-import com.github.tatercertified.vanilla.Potatoptimize;
 import com.github.tatercertified.vanilla.config.mixintree.NodeData;
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
-
 import dev.neuralnexus.taterapi.meta.Platforms;
 import dev.neuralnexus.taterapi.meta.enums.Platform;
-
+import java.io.File;
+import java.util.List;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-
 public class MixinConfig implements IMixinConfigPlugin {
-    private static String MIXIN_PACKAGE_ROOT;
+    private static final String MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.";
     public static Platform platform;
     private final Logger logger = LogManager.getLogger("PotatoptimizeConfig");
     private PotatoptimizeConfig config;
@@ -32,12 +28,6 @@ public class MixinConfig implements IMixinConfigPlugin {
     public void onLoad(String mixinPackage) {
         // Loader detection
         platform = Platforms.detectPrimary();
-
-        if (platform.ref().isFabric()) {
-            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.y_intmdry.";
-        } else {
-            MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.";
-        }
 
         MixinConstraintsBootstrap.init(mixinPackage);
 
@@ -50,8 +40,6 @@ public class MixinConfig implements IMixinConfigPlugin {
         this.logger.info(
                 "Loaded optimizations overrides for Potatoptimize: {} override(s) found",
                 this.config.tree.getOverrides());
-
-        Potatoptimize.configLoaded = true;
     }
 
     @Override

@@ -1,17 +1,15 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/Potatoptimize/blob/main/LICENSE">MIT</a>
  */
 package com.github.tatercertified.vanilla.mixin.nonvanilla.entity.teleport.portal;
 
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.level.portal.PortalShape;
 import net.minecraft.world.phys.Vec3;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,11 +28,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class NetherPortalMixin {
     @Inject(method = "findCollisionFreePosition", at = @At("HEAD"), cancellable = true)
     private static void findOpenPos(
-            Vec3 fallback,
-            ServerLevel world,
+            Vec3 bottomCenter,
+            ServerLevel serverLevel,
             Entity entity,
             EntityDimensions dimensions,
             CallbackInfoReturnable<Vec3> cir) {
-        cir.setReturnValue(fallback);
+        cir.setReturnValue(bottomCenter);
     }
 }

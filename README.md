@@ -10,7 +10,7 @@ Most optimizations are niche changes that no other large optimization mod covers
 This mod *does not* intend to respect vanilla parity. Optimizations that do respect vanilla parity are listed on the [wiki](https://github.com/Tater-Certified/Potatoptimize/wiki/Configuration-File).
 
 
-## But I play on <insert mod loader>, can I use it?
+## But I play on \<insert mod loader\>, can I use it?
 The chances are good, probably yes! This mod supports Fabric, Quilt, Forge, NeoForge, and Sponge!
 PaperMC (and forks) support is unlikely to happen since this mod borrows patches from those projects.
 
