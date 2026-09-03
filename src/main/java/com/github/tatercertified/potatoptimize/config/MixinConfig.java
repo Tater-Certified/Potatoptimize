@@ -4,9 +4,9 @@
  */
 package com.github.tatercertified.potatoptimize.config;
 
-import com.github.tatercertified.potatoptimize.config.mixintree.NodeData;
 import com.github.tatercertified.mixinconstraints.MixinConstraints;
 import com.github.tatercertified.mixinconstraints.mixin.MixinConstraintsBootstrap;
+import com.github.tatercertified.potatoptimize.config.mixintree.NodeData;
 import dev.neuralnexus.taterapi.meta.Platforms;
 import dev.neuralnexus.taterapi.meta.enums.Platform;
 import java.io.File;
