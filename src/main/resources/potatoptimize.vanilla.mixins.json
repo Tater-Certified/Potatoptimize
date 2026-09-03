@@ -1,8 +1,8 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.tatercertified.vanilla.mixin",
-  "plugin": "com.github.tatercertified.vanilla.config.MixinConfig",
+  "package": "com.github.tatercertified.potatoptimize.mixin",
+  "plugin": "com.github.tatercertified.potatoptimize.config.MixinConfig",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "nonvanilla.entity.teleport.portal.NetherPortalMixin",

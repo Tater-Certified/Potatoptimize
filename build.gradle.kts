@@ -70,6 +70,7 @@ repositories {
     unimined.spongeMaven()
     maven("https://maven.neuralnexus.dev/releases")
     maven("https://maven.neuralnexus.dev/snapshots")
+    maven("https://jitpack.io")
 }
 
 unimined.minecraft {
@@ -109,7 +110,7 @@ dependencies {
     implementation("dev.neuralnexus.taterlib.lite:base:0.2.0-SNAPSHOT")
     implementation("dev.neuralnexus.taterlib.lite:metadata:0.2.0-SNAPSHOT")
     implementation("org.tomlj:tomlj:1.1.1")
-    implementation("com.moulberry:mixinconstraints:1.0.8")
+    implementation("com.github.Tater-Certified:MixinConstraints:217bb39900")
 }
 
 tasks.withType<ProcessResources> {
@@ -127,6 +128,9 @@ tasks.withType<ProcessResources> {
 
 tasks.shadowJar {
     archiveClassifier.set("")
+
+    enableAutoRelocation = true
+    relocationPrefix = "com.github.tatercertified.potatoptimize.shaded"
 
     from(
         fabric.output,
