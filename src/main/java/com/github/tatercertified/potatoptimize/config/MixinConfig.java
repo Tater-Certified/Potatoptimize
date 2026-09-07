@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class MixinConfig implements IMixinConfigPlugin {
-    private static final String MIXIN_PACKAGE_ROOT = "com.github.tatercertified.vanilla.";
+    private static final String MIXIN_PACKAGE_ROOT = "com.github.tatercertified.potatoptimize.";
     public static Platform platform;
     private final Logger logger = LogManager.getLogger("PotatoptimizeConfig");
     private PotatoptimizeConfig config;
