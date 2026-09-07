@@ -14,7 +14,7 @@
   "icon": "icon.png",
   "environment": "*",
   "mixins": [
-    "potatoptimize.vanilla.mixins.json"
+    "potatoptimize.mixins.json"
   ],
   "depends": {
     "fabricloader": "*",

@@ -152,7 +152,7 @@ tasks.shadowJar {
                 "Implementation-Timestamp" to Instant.now().toString(),
                 "FMLCorePluginContainsFMLMod" to "true",
                 "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" to "$modId.mixins.vanilla.json"
+                "MixinConfigs" to "potatoptimize.mixins.json"
             )
         )
     }
